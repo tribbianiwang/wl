@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <LinearLayout
+            android:paddingTop="@dimen/app_margin_small"
+            android:paddingBottom="@dimen/app_margin_small"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4"
+    >
+        <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/llRadioLocal"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/icon_radio_local"
+                    android:scaleType="fitCenter"
+            />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/string_radio_local"
+                      android:textSize="@dimen/small_text_size"
+                      android:textColor="@color/design_text_black"
+            />
+
+
+        </LinearLayout>
+        <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/llRadioCountry"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/icon_radio_country"
+                    android:scaleType="fitCenter"
+            />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/string_radio_country"
+                      android:textSize="@dimen/small_text_size"
+                      android:textColor="@color/design_text_black"
+            />
+
+
+        </LinearLayout>
+        <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/llRadioProvince"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/icon_radio_province"
+                    android:scaleType="fitCenter"
+            />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/string_radio_province"
+                      android:textSize="@dimen/small_text_size"
+                      android:textColor="@color/design_text_black"
+            />
+
+
+        </LinearLayout>
+        <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/llRadioInternet"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/icon_radio_internet"
+                    android:scaleType="fitCenter"
+            />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/string_radio_internet"
+                      android:textSize="@dimen/small_text_size"
+                      android:textColor="@color/design_text_black"
+            />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

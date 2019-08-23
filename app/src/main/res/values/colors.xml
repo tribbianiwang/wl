@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1156CD</color>
+    <color name="colorPrimaryDark">#1156CD</color>
+    <color name="colorAccent">#1156CD</color>
+
+    <color name="primary_blue">#1156CD</color>
+    <color name="primary">#1156CD</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="alphablack">#33000000</color>
+    <color name="alphablack1">#60000000</color>
+
+    <color name="gray">#808080</color>
+    <color name="gray_white">#F2F2F2</color>
+    <color name="special_gray">#BBBBBB</color>
+    <color name="idontknow">#F2F2F2</color>
+
+    <color name="font_red">@color/design_main_orange</color>
+
+    <color name="transparent_white">#33ffffff</color>
+    <color name="almost_transparent">#11ffffff</color>
+
+    <!-- togglebutton -->
+
+    <!-- blood -->
+
+    <!--city_event_item-->
+    <color name="event1">#ff5e67</color>
+    <color name="event6">#ffcf2f</color>
+
+
+    <color name="silver">#DFE2E7</color>
+    <color name="divider">#E5E5E5</color>
+    <color name="gray_deep">#5c5c5c</color>
+    <color name="alpha_dark_black">#98000000</color>
+
+    <color name="defaultblue">#1296DB</color>
+    <color name="pressblue">#4682B4</color>
+    <color name="gray_lite">#c5c5c5</color>
+    <color name="transparent">#00ffffff</color>
+
+    <color name="home_red">#dd4b39</color>
+
+
+    <color name="wallet">#38B5F3</color>
+    <color name="wallet_press">#1296DB</color>
+    <color name="blue_white">#b9dfff</color>
+
+    <!-- jqk -->
+    <color name="default_blue">#3884DD</color>
+    <color name="c0c0c" >#9d9d9d</color>
+    <color name="design_main_black">#2d3036</color>
+    <color name="design_main_orange">#FF7D32</color>
+    <color name="design_main_blue">#02a0e9</color>
+    <color name="design_text_alpha_gray">#9d9d9d</color>
+    <color name="design_text_black">#0c0c0c</color>
+    <color name="design_text_gray">#636362</color>
+    <color name="design_bg_gray">#e8e8e8</color>
+    <color name="design_bg_blue">#8ebaed</color>
+    <color name="design_main_red">#FA0001</color>
+
+    <color name="color_card_type_bg_season">#fc6b5a</color>
+    <color name="color_card_type_bg_year">#7000e3</color>
+    <color name="color_card_type_bg_month">#319ffe</color>
+    <color name="soft_gray">#99ffffff</color>
+
+    <color name="color_loading_status">#FFCCCCCC</color>
+
+</resources>

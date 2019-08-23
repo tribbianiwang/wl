@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:gravity="center"
+>
+    <ImageView
+            android:id="@+id/ivTabItem"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitCenter"
+    />
+
+    <TextView
+            android:id="@+id/tvTabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@drawable/selector_gray_blue"
+    />
+
+
+</LinearLayout>

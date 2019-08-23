@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+
+              android:background="@color/white"
+>
+
+
+
+    <LinearLayout
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="@dimen/app_margin_left"
+
+    >
+
+    <ImageView android:layout_width="48dp" android:layout_height="48dp"
+               android:src="@drawable/icon_radio_test"
+               android:scaleType="fitXY"
+               android:layout_gravity="center_vertical"
+               android:id="@+id/ivRadioLogo"
+    />
+
+    <LinearLayout
+            android:layout_marginLeft="@dimen/app_margin_left"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+    >
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textSize="@dimen/small_text_size"
+                  android:textColor="@color/design_text_black"
+                  android:text="北京外语广播"
+                  android:id="@+id/tvRadioName"
+        />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textColor="@color/design_text_gray"
+                  android:textSize="@dimen/micro_text_size"
+                  android:text="正在直播:《央广车友会》"
+                  android:singleLine="true"
+                  android:maxEms="15"
+                  android:ellipsize="end"
+                  android:id="@+id/tvShowName"
+                  android:layout_marginTop="@dimen/app_margin_small"
+
+        />
+
+        <LinearLayout
+                android:layout_marginTop="@dimen/app_margin_small"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal"
+                android:gravity="center"
+        >
+            <ImageView android:layout_width="12dp" android:layout_height="12dp"
+            android:src="@drawable/icon_play_line"
+                       android:scaleType="fitCenter"
+            />
+
+
+            <TextView
+                    android:id="@+id/tvPeopleTimes"
+                    android:layout_marginLeft="@dimen/app_margin_small"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="收听人数:495.0万"
+                      android:textSize="@dimen/micro_small_text_size"
+                      android:textColor="@color/gray"
+            />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ImageView android:layout_width="25dp" android:layout_height="25dp"
+               android:id="@+id/ivPlayWave"
+               android:background="@drawable/anim_wave_show"
+               android:layout_gravity="center_vertical"
+               android:scaleType="fitXY"
+        android:layout_marginLeft="@dimen/app_margin_small"
+               android:layout_marginRight="@dimen/app_margin_small"
+    />
+
+
+    <ImageView
+            android:layout_width="18dp" android:layout_height="18dp"
+               android:src="@drawable/item_arrow"
+               android:layout_gravity="center_vertical"
+               android:scaleType="fitXY"
+
+    />
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="0.5dp"
+          android:background="@color/gray_white"
+    />
+</LinearLayout>
