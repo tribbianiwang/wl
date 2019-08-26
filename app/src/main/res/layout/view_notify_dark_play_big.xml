@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/notification_default" />
+        android:src="@drawable/icon_placeholder_gray" />
 
     <ImageView
         android:id="@+id/img_notifyClose"
@@ -67,6 +67,7 @@
         android:paddingTop="3dp">
 
         <ImageView
+                android:foreground="?selectableItemBackground"
             android:id="@+id/img_notifyPre"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -78,6 +79,7 @@
             android:src="@drawable/notify_btn_light_prev_normal_xml" />
 
         <ImageView
+                android:foreground="?selectableItemBackground"
             android:id="@+id/img_notifyPlayOrPause"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -87,6 +89,7 @@
             android:src="@drawable/notify_btn_light_pause_normal_xml" />
 
         <ImageView
+                android:foreground="?selectableItemBackground"
             android:id="@+id/img_notifyNext"
             android:layout_width="48dp"
             android:layout_height="48dp"

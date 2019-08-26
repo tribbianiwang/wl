@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/notification_default" />
+        android:src="@drawable/icon_placeholder_gray" />
 
     <ImageView
         android:id="@+id/img_notifyNext"

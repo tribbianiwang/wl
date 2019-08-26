@@ -1,13 +1,18 @@
 package com.wl.radio.activity
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.LinearInterpolator
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -38,19 +43,19 @@ import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 import kotlinx.android.synthetic.main.activity_playing.*
 
 
+class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
 
-
-class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
-
-
-    val TAG:String="PlayingActivity"
+    val TAG: String = "PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
 
-    var broadcastReceiver = object:BroadcastReceiver(){
+    var animator: ObjectAnimator? = null
+
+
+    var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            when(intent.action){
-                RESET_RADIO_IMG_AND_TITLE_ACTION->{
+            when (intent.action) {
+                RESET_RADIO_IMG_AND_TITLE_ACTION -> {
                     setTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
                 }
             }
@@ -58,7 +63,6 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         }
 
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,42 +89,41 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         lifecycle.addObserver(radioLiveViewModel)
 
         //3
-        val queryStatusObserver:Observer<String> = Observer {
+        val queryStatusObserver: Observer<String> = Observer {
 
-            when(it){
-                QUERYSTATUSLOADING->LogUtils.d(TAG,QUERYSTATUSLOADING)
-                QUERYSTATUSFAILED->LogUtils.d(TAG,QUERYSTATUSFAILED)
-                QUERYSTATUSSUCCESS->LogUtils.d(TAG,QUERYSTATUSSUCCESS)
+            when (it) {
+                QUERYSTATUSLOADING -> LogUtils.d(TAG, QUERYSTATUSLOADING)
+                QUERYSTATUSFAILED -> LogUtils.d(TAG, QUERYSTATUSFAILED)
+                QUERYSTATUSSUCCESS -> LogUtils.d(TAG, QUERYSTATUSSUCCESS)
             }
 
         }
 
-        val errorMsgObserver:Observer<String> = Observer{
-            LogUtils.d(TAG,it)
+        val errorMsgObserver: Observer<String> = Observer {
+            LogUtils.d(TAG, it)
         }
 
-        val radioListResultObserver:Observer<RadioList> = Observer{
+        val radioListResultObserver: Observer<RadioList> = Observer {
 
 
             val selectRadio = it.radios.get(0)
 
-            setViewData(selectRadio,false)
-
+            setViewData(selectRadio, false)
 
 
         }
 
 
-        val radioInfoObserver:Observer<ProgramList> = Observer {
+        val radioInfoObserver: Observer<ProgramList> = Observer {
             val getmProgramList = it?.getmProgramList();
             if (getmProgramList != null) {
-                for(index in getmProgramList.indices){
-                    LogUtils.d(TAG,"radioInfo:"+getmProgramList?.get(index))
-                     var selectRadio:Radio = Radio()
-                    selectRadio.coverUrlLarge=getmProgramList?.get(index).backPicUrl
-                    selectRadio.radioName=getmProgramList?.get(index).programName
-                    selectRadio.programName=getmProgramList?.get(index).programName
-                    setViewData(selectRadio,true)
+                for (index in getmProgramList.indices) {
+                    LogUtils.d(TAG, "radioInfo:" + getmProgramList?.get(index))
+                    var selectRadio: Radio = Radio()
+                    selectRadio.coverUrlLarge = getmProgramList?.get(index).backPicUrl
+                    selectRadio.radioName = getmProgramList?.get(index).programName
+                    selectRadio.programName = getmProgramList?.get(index).programName
+                    setViewData(selectRadio, true)
 
                 }
 
@@ -130,22 +133,22 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
         //4
 
-        radioLiveViewModel.errorMsgLiveData?.observe(this,errorMsgObserver)
-        radioLiveViewModel.queryStatusLiveData?.observe(this,queryStatusObserver)
-        radioLiveViewModel.radioListLiveData?.observe(this,radioListResultObserver)
-        radioLiveViewModel.radioInfoLiveData?.observe(this,radioInfoObserver)
+        radioLiveViewModel.errorMsgLiveData?.observe(this, errorMsgObserver)
+        radioLiveViewModel.queryStatusLiveData?.observe(this, queryStatusObserver)
+        radioLiveViewModel.radioListLiveData?.observe(this, radioListResultObserver)
+        radioLiveViewModel.radioInfoLiveData?.observe(this, radioInfoObserver)
 
-        if(transRadio!=null){
+        if (transRadio != null) {
             //从列表中点击进入
-            setViewData(transRadio,false)
-            LogUtils.d(TAG,"transRadio!=null")
+            setViewData(transRadio, false)
+            LogUtils.d(TAG, "transRadio!=null")
 
-        }else{
-            if(!(mPlayerManager?.isPlaying?:false)){
+        } else {
+            if (!(mPlayerManager?.isPlaying ?: false)) {
                 //没有正在播放的广播
-                LogUtils.d(TAG,"transRadio==null")
-                radioLiveViewModel.getXmlyRadios(1,0,1)
-            }else{
+                LogUtils.d(TAG, "transRadio==null")
+                radioLiveViewModel.getXmlyRadios(1, 0, 1)
+            } else {
                 //有正在播放的
                 mPlayerManager?.getCurrSound()?.dataId?.let { radioLiveViewModel?.getRadioInfo(it) }
             }
@@ -153,16 +156,17 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         }
 
 
-
         var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
-        registerReceiver(broadcastReceiver,intentFilter)
+        registerReceiver(broadcastReceiver, intentFilter)
+
+        initAnim()
 
     }
 
-    private fun setTitleAndImg(selectRadio: Radio?){
-        selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it,ivCover) }
-        tvRadioName.text= selectRadio?.programName
-        tvTitle.text=selectRadio?.radioName
+    private fun setTitleAndImg(selectRadio: Radio?) {
+        selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
+        tvRadioName.text = selectRadio?.programName
+        tvTitle.text = selectRadio?.radioName
     }
 
     override fun onDestroy() {
@@ -170,8 +174,8 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         unregisterReceiver(broadcastReceiver)
     }
 
-    private fun setViewData(selectRadio: Radio?,isOnlySetView:Boolean) {
-        if(!isOnlySetView){
+    private fun setViewData(selectRadio: Radio?, isOnlySetView: Boolean) {
+        if (!isOnlySetView) {
             mPlayerManager?.playActivityRadio(selectRadio)
 
         }
@@ -179,23 +183,23 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         setTitleAndImg(selectRadio)
 
 
-        ivPlayPause.setOnClickListener{
-            if(mPlayerManager?.isPlaying!!){
+        ivPlayPause.setOnClickListener {
+            if (mPlayerManager?.isPlaying!!) {
 
                 mPlayerManager!!.pause()
-            }else{
+            } else {
                 mPlayerManager?.play()
             }
 
         }
-        ivPlayNext.setOnClickListener{
+        ivPlayNext.setOnClickListener {
 
-           MyApplication.playNextRadio()
+            MyApplication.playNextRadio()
 
         }
 
-        ivPlayPrevious.setOnClickListener{
-           MyApplication.playPreRadio()
+        ivPlayPrevious.setOnClickListener {
+            MyApplication.playPreRadio()
         }
 
 
@@ -203,8 +207,10 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
 
     override fun onPlayStart() {
-        LogUtils.d(TAG,"onPlayStart")
-
+        LogUtils.d(TAG, "onPlayStart")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            startRotateAnim()
+        }
         ivPlayPause.setImageResource(R.drawable.selector_pause_drawable)
     }
 
@@ -217,12 +223,14 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 //            false->tvAd.text="节目播放中"
 //            true->tvAd.text="广告播放中"
 //        }
-        LogUtils.d(TAG,"onPlayProgress"+mPlayerManager?.isAdPlaying)
+        LogUtils.d(TAG, "onPlayProgress" + mPlayerManager?.isAdPlaying)
 
     }
 
     override fun onPlayPause() {
-        LogUtils.d(TAG,"onPlayPause")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            stopRotateAnim()
+        }
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
     }
 
@@ -230,15 +238,18 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
     }
 
     override fun onPlayStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            stopRotateAnim()
+        }
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
-        LogUtils.d(TAG,"onPlayStop")
+
     }
 
     override fun onBufferingStart() {
     }
 
     override fun onSoundPlayComplete() {
-        LogUtils.d(TAG,"onPlayStop")
+        LogUtils.d(TAG, "onPlayStop")
     }
 
     override fun onError(p0: XmPlayerException?): Boolean {
@@ -251,8 +262,6 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
     override fun onBufferingStop() {
     }
-
-
 
 
     private fun initToolbar() {
@@ -269,4 +278,32 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
 
     }
+
+    var isAnimRunning: Boolean = false
+    fun initAnim() {
+        animator = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360.0f);
+        animator?.setDuration(20000);
+        animator?.setInterpolator(LinearInterpolator());//不停顿
+        animator?.setRepeatCount(-1);//设置动画重复次数
+        animator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun startRotateAnim() {
+
+        if (isAnimRunning) {
+            animator?.resume();
+        } else {
+            animator?.start();//开始动画
+            isAnimRunning = true;
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun stopRotateAnim() {
+
+        animator?.pause();
+    }
+
+
 }
