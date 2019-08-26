@@ -63,6 +63,12 @@ object Constants {
     val NEXT_SHOW_ACTION = "com.wl.radio.action.next_show"
     val PRE_SHOW_ACTION = "com.wl.radio.action_pre_show"
 
+    val APPLICATION_NEXT_SHOW_ACTION = "com.wl.radio.action.next_show_application"
+    val APPLICATION_PRE_SHOW_ACTION = "com.wl.radio.action_pre_show_application"
+
+    val RESET_RADIO_IMG_AND_TITLE_ACTION = "RESET_RADIO_IMG_AND_TITLE_ACTION"
+
+
 
 
     val DEFAULTPAGECOUNT=20

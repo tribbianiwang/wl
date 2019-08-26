@@ -1,5 +1,9 @@
 package com.wl.radio.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +16,7 @@ import com.wl.radio.R
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
+import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
@@ -42,11 +47,26 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
     val TAG:String="PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
 
+    var broadcastReceiver = object:BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            when(intent.action){
+                RESET_RADIO_IMG_AND_TITLE_ACTION->{
+                    setTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
+                }
+            }
+
+        }
+
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playing)
         initToolbar()
+
+
 
         mPlayerManager = XmPlayerManager.getInstance(this)
         val mNotification = XmNotificationCreater.getInstanse(this)
@@ -134,7 +154,8 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
 
 
-
+        var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
+        registerReceiver(broadcastReceiver,intentFilter)
 
     }
 
@@ -142,6 +163,11 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it,ivCover) }
         tvRadioName.text= selectRadio?.programName
         tvTitle.text=selectRadio?.radioName
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
     }
 
     private fun setViewData(selectRadio: Radio?,isOnlySetView:Boolean) {
@@ -164,12 +190,12 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         }
         ivPlayNext.setOnClickListener{
 
-            setTitleAndImg( MyApplication.playNextRadio())
+           MyApplication.playNextRadio()
 
         }
 
         ivPlayPrevious.setOnClickListener{
-            setTitleAndImg(MyApplication.playPreRadio())
+           MyApplication.playPreRadio()
         }
 
 

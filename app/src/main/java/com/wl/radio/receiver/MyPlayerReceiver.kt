@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.wl.radio.MyApplication
 import com.wl.radio.util.ActivityUtil
+import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
 import com.wl.radio.util.Constants.NEXT_SHOW_ACTION
 import com.wl.radio.util.Constants.PRE_SHOW_ACTION
@@ -37,11 +39,14 @@ class MyPlayerReceiver :BroadcastReceiver(){
             }
         }else if(intent?.action== PRE_SHOW_ACTION){
 
+            context?.sendBroadcast(Intent(Constants.APPLICATION_PRE_SHOW_ACTION))
 
-            XmPlayerManager.getInstance(context).playPre()
+//            MyApplication.playPreRadio()
+
 
         }else if(intent?.action== NEXT_SHOW_ACTION){
-            XmPlayerManager.getInstance(context).playNext()
+            context?.sendBroadcast(Intent(Constants.APPLICATION_NEXT_SHOW_ACTION))
+//            MyApplication.playNextRadio()
         }
     }
 }

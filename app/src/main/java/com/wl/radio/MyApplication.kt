@@ -7,20 +7,42 @@ import com.wl.radio.util.Constants.XMLYAPPSECRET
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import com.wl.radio.receiver.MyPlayerReceiver
+import com.wl.radio.util.Constants
+import com.wl.radio.util.Constants.APPLICATION_NEXT_SHOW_ACTION
+import com.wl.radio.util.Constants.APPLICATION_PRE_SHOW_ACTION
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
 import com.wl.radio.util.Constants.NEXT_SHOW_ACTION
 import com.wl.radio.util.Constants.PRE_SHOW_ACTION
+import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
+import com.wl.radio.util.Constants.TRANSRADIO
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
 
 class MyApplication : Application() {
+
+    var broadcastReceiver:BroadcastReceiver = object:BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.d(TAG,"application:action"+intent.action)
+            when(intent.action){
+                APPLICATION_NEXT_SHOW_ACTION-> playNextRadio()
+                APPLICATION_PRE_SHOW_ACTION-> playPreRadio()
+
+
+            }
+
+        }
+
+    }
+
 
 
     override fun onCreate() {
@@ -30,6 +52,10 @@ class MyApplication : Application() {
         CommonRequest.getInstanse().init(this, XMLYAPPSECRET);
         XmPlayerManager.getInstance(this).init()
         context = this
+        var intentFilter = IntentFilter()
+        intentFilter.addAction(APPLICATION_NEXT_SHOW_ACTION)
+        intentFilter.addAction(APPLICATION_PRE_SHOW_ACTION)
+        registerReceiver(broadcastReceiver,intentFilter)
 
 
 
@@ -72,9 +98,10 @@ class MyApplication : Application() {
             return context!!
         }
         fun playNextRadio(): Radio? {
-            Log.d(TAG,"playNextRadio"+getPlayingRadioIndex())
+            Log.d(TAG,"playNextRadio"+getPlayingRadioIndex()+"radiolistsize--"+ radioList.size)
             if (radioList.size > 0 && getPlayingRadioIndex() < (radioList.size - 1)) {
                 XmPlayerManager.getInstance(getContext()).playActivityRadio(radioList[getPlayingRadioIndex() + 1])
+                sendUpdateImageAndTitleBroadcast(radioList[getPlayingRadioIndex() + 1])
                 return radioList[getPlayingRadioIndex() + 1]
             }else{
                 return null
@@ -87,11 +114,17 @@ class MyApplication : Application() {
             Log.d(TAG,"playPreRadio"+getPlayingRadioIndex())
             if (radioList.size > 0 && getPlayingRadioIndex() != 0) {
                 XmPlayerManager.getInstance(getContext()).playActivityRadio(radioList[getPlayingRadioIndex() - 1])
+                sendUpdateImageAndTitleBroadcast(radioList[getPlayingRadioIndex()-1])
                 return radioList[getPlayingRadioIndex()-1]
             }else{
                 return null
             }
 
+        }
+        fun sendUpdateImageAndTitleBroadcast(radio: Radio){
+            var intent = Intent(RESET_RADIO_IMG_AND_TITLE_ACTION)
+            intent.putExtra(TRANSRADIO,radio)
+            getContext().sendBroadcast(intent)
         }
 
 
@@ -116,4 +149,7 @@ class MyApplication : Application() {
         }
 
     }
+
+
+
 }
