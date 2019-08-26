@@ -9,6 +9,8 @@ import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import android.app.PendingIntent
 import android.content.Intent
 import com.wl.radio.receiver.MyPlayerReceiver
+import com.wl.radio.util.Constants.CLOSE_APP_ACTION
+import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
@@ -29,11 +31,24 @@ class MyApplication : Application(){
             instanse.setPrePendingIntent(null as PendingIntent?)
             instanse.setStartOrPausePendingIntent(null as PendingIntent?)
 
-            val actionName = "com.app.test.android.Action_Close"
-            val intent = Intent(actionName)
-            intent.setClass(this, MyPlayerReceiver::class.java!!)
-            val broadcast = PendingIntent.getBroadcast(this, 0, intent, 0)
-            instanse.setClosePendingIntent(broadcast)
+
+
+
+            val closeAppIntent = Intent(CLOSE_APP_ACTION)
+            closeAppIntent.setClass(this, MyPlayerReceiver::class.java!!)
+            val closeAppBroadcast = PendingIntent.getBroadcast(this, 0, closeAppIntent, 0)
+            instanse.setClosePendingIntent(closeAppBroadcast)
+
+
+            val startOrPauseIntent = Intent(START_OR_PAUSE_ACTION)
+            startOrPauseIntent.setClass(this, MyPlayerReceiver::class.java!!)
+            val startOrPauseBroadcast = PendingIntent.getBroadcast(this,0,startOrPauseIntent,0)
+            instanse.setStartOrPausePendingIntent(startOrPauseBroadcast)
+
+
+
+
+
         }
     }
 

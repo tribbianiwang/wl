@@ -61,7 +61,8 @@
 
         <receiver android:name=".receiver.MyPlayerReceiver" android:exported="true" android:process=":player">
             <intent-filter>
-                <action android:name="com.app.test.android.Action_Close"/>
+                <action android:name="com.wl.radio.action_exit_app"/>
+                <action android:name="com.wl.radio.action_start_or_pause"></action>
             </intent-filter>
         </receiver>
 
