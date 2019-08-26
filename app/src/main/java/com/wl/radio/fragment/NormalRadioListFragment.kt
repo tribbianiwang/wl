@@ -31,6 +31,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import com.wl.radio.util.Constants.BROADCASTSELECTRADIOIDCHANGE
 import android.content.IntentFilter
+import com.wl.radio.MyApplication
 import com.wl.radio.util.Constants.SELECTRADIOID
 import com.wl.radio.util.Constants.TRANSRADIO
 
@@ -217,7 +218,7 @@ class NormalRadioListFragment : Fragment() {
                 activity?.sendBroadcast(broadcastIntent)
 
 
-
+                MyApplication.refreshRadioList(reRecordLists as ArrayList<Radio>)
                 var intent: Intent = Intent(activity, PlayingActivity::class.java)
                 intent.putExtra(Constants.TRANSRADIO,reRecordLists?.get(position))
                 startActivity(intent)

@@ -6,6 +6,8 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wl.radio.MyApplication
+import com.wl.radio.MyApplication.Companion.refreshRadioList
 import com.wl.radio.R
 import com.wl.radio.adapter.RvHomeAdapter
 import com.wl.radio.util.*
@@ -27,7 +29,7 @@ class NormalRadioListActivity : BaseActivity() {
     internal var isPullRefresh = false
     private var page = 1
     private var radioCategoryId:Int=0
-
+    val instance by lazy { this }
     private var reRecordLists: MutableList<Radio>? = null
     private var rvAdapter:RvHomeAdapter?=null
     private var cityCode=410000
@@ -159,10 +161,7 @@ class NormalRadioListActivity : BaseActivity() {
             nomore(true)
             return
         }else{
-
-
             nomore(false)
-
             radioList?.radios?.let { (reRecordLists as ArrayList<Radio>).addAll(it) }
             rvAdapter?.notifyDataSetChanged()
             return
@@ -190,9 +189,11 @@ class NormalRadioListActivity : BaseActivity() {
 
         rvAdapter!!.setOnItemClickListener(object : RvItemClickListener {
             override fun onItemClick(view: View, position: Int) {
+
+
+                refreshRadioList(reRecordLists as ArrayList)
                 var intent: Intent = Intent(this@NormalRadioListActivity,PlayingActivity::class.java)
                 rvAdapter?.selectDataId = reRecordLists?.get(position)?.dataId?:0
-
                 rvAdapter?.notifyDataSetChanged()
                 intent.putExtra(TRANSRADIO,reRecordLists?.get(position))
 

@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.wl.radio.MyApplication
 import com.wl.radio.R
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
@@ -137,15 +138,21 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
     }
 
-    private fun setViewData(selectRadio: Radio?,isOnlySetView:Boolean) {
-        selectRadio?.radioName?.let { LogUtils.d(TAG, it) }
-        if(!isOnlySetView){
-            mPlayerManager?.playActivityRadio(selectRadio)
-        }
-
+    private fun setTitleAndImg(selectRadio: Radio?){
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it,ivCover) }
         tvRadioName.text= selectRadio?.programName
         tvTitle.text=selectRadio?.radioName
+    }
+
+    private fun setViewData(selectRadio: Radio?,isOnlySetView:Boolean) {
+        if(!isOnlySetView){
+            mPlayerManager?.playActivityRadio(selectRadio)
+
+        }
+
+        setTitleAndImg(selectRadio)
+
+
         ivPlayPause.setOnClickListener{
             if(mPlayerManager?.isPlaying!!){
 
@@ -156,11 +163,13 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
 
         }
         ivPlayNext.setOnClickListener{
-            mPlayerManager?.playNext()
+
+            setTitleAndImg( MyApplication.playNextRadio())
+
         }
 
         ivPlayPrevious.setOnClickListener{
-            mPlayerManager?.playPre()
+            setTitleAndImg(MyApplication.playPreRadio())
         }
 
 

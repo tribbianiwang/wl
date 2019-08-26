@@ -60,6 +60,8 @@ object Constants {
 
     val CLOSE_APP_ACTION = "com.wl.radio.action_exit_app"
     val START_OR_PAUSE_ACTION = "com.wl.radio.action_start_or_pause"
+    val NEXT_SHOW_ACTION = "com.wl.radio.action.next_show"
+    val PRE_SHOW_ACTION = "com.wl.radio.action_pre_show"
 
 
 

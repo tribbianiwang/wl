@@ -7,6 +7,8 @@ import android.content.Intent
 import android.util.Log
 import com.wl.radio.util.ActivityUtil
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
+import com.wl.radio.util.Constants.NEXT_SHOW_ACTION
+import com.wl.radio.util.Constants.PRE_SHOW_ACTION
 import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 
@@ -14,7 +16,7 @@ class MyPlayerReceiver :BroadcastReceiver(){
     val TAG = "MyPlayerReceiver"
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        Log.d(TAG,"action:"+intent?.action)
+        Log.d(TAG,"action:"+intent?.action+"listsize:"+XmPlayerManager.getInstance(context).playList.size)
         if (intent?.getAction() ==CLOSE_APP_ACTION) {
 
             val mActivityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -33,6 +35,13 @@ class MyPlayerReceiver :BroadcastReceiver(){
             } else {
                 XmPlayerManager.getInstance(context).play()
             }
+        }else if(intent?.action== PRE_SHOW_ACTION){
+
+
+            XmPlayerManager.getInstance(context).playPre()
+
+        }else if(intent?.action== NEXT_SHOW_ACTION){
+            XmPlayerManager.getInstance(context).playNext()
         }
     }
 }

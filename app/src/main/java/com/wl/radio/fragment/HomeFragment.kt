@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wl.radio.MyApplication
 import com.wl.radio.R
 import com.wl.radio.activity.NormalRadioListActivity
 import com.wl.radio.activity.PlayingActivity
@@ -132,6 +133,7 @@ class HomeFragment : Fragment() {
                     override fun onItemClick(view: View, position: Int) {
 
                         refreshWaveAnim(it?.radios?.get(position)?.dataId?:0)
+                        MyApplication.refreshRadioList(it.radios as ArrayList<Radio>)
                         var intent: Intent = Intent(activity, PlayingActivity::class.java)
 
                         intent.putExtra(Constants.TRANSRADIO,it?.radios?.get(position))
@@ -158,6 +160,7 @@ class HomeFragment : Fragment() {
 
 
                         refreshWaveAnim(it?.radios?.get(position)?.dataId?:0)
+                        MyApplication.refreshRadioList(it.radios as ArrayList<Radio>)
                         var intent: Intent = Intent(activity, PlayingActivity::class.java)
                         intent.putExtra(Constants.TRANSRADIO,it?.radios?.get(position))
                         startActivity(intent)

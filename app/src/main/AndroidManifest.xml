@@ -63,6 +63,8 @@
             <intent-filter>
                 <action android:name="com.wl.radio.action_exit_app"/>
                 <action android:name="com.wl.radio.action_start_or_pause"></action>
+                <action android:name="com.wl.radio.action.next_show"></action>
+                <action android:name="com.wl.radio.action_pre_show"></action>
             </intent-filter>
         </receiver>
 
