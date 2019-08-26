@@ -58,6 +58,8 @@ object Constants {
     val PULLTOREFRESHREFRESH=1
     val PULLTOREFRESHLOADMORE=2
 
+    val CLOSE_APP_ACTION = "com.wl.radio.action_exit_app"
+
 
     val DEFAULTPAGECOUNT=20
 

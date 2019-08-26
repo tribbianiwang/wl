@@ -1,30 +1,43 @@
 package com.wl.radio.util
 
 import android.app.Activity
+import android.util.Log
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 
-class ActivityUtil {
-    object  list{
-        var list:ArrayList<Activity>?=null
-    }
+object ActivityUtil {
+     val TAG = "ActivityUtil"
 
-    companion object {
+        var activityList:ArrayList<Activity>?= ArrayList()
+
+
         fun addActivity(activity:Activity){
-            list.list?.add(activity)
+            Log.d(TAG,"addActivity:activityname"+activity.localClassName)
+            activityList?.add(activity)
+            Log.d(TAG,"addActivity:size"+activityList?.size)
         }
 
 
         fun removeActivity(activity: Activity){
-            list.list?.remove(activity)
+            Log.d(TAG,"removeActivity"+activity.localClassName)
+            activityList?.remove(activity)
         }
 
         fun exitActivity(){
+
+
+            Log.d(TAG,"activityListSize"+ activityList?.size)
+            if(activityList!=null){
+                for(activity in activityList!!){
+                    activity.finish()
+
+                }
+            }
+            activityList?.clear()
             XmPlayerManager.release()
-            list.list?.clear();
-            System.exit(0);
+            System.exit(0)
 
         }
 
-    }
+
 
 }

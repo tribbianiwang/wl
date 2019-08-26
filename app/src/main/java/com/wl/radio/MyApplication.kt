@@ -8,6 +8,7 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import android.app.PendingIntent
 import android.content.Intent
+import com.wl.radio.receiver.MyPlayerReceiver
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 

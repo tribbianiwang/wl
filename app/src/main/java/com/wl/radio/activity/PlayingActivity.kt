@@ -24,6 +24,7 @@ import com.ximalaya.ting.android.opensdk.model.live.program.ProgramList
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.model.live.radio.RadioList
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
+import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
@@ -49,6 +50,7 @@ class PlayingActivity : BaseActivity() , IXmPlayerStatusListener {
         mPlayerManager = XmPlayerManager.getInstance(this)
         val mNotification = XmNotificationCreater.getInstanse(this)
             .initNotification(this.applicationContext, PlayingActivity::class.java)
+        NotificationColorUtils.isTargerSDKVersion24More = true;
         mPlayerManager?.init(System.currentTimeMillis().toInt(), mNotification)
         mPlayerManager?.addPlayerStatusListener(this)
 

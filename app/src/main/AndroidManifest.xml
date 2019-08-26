@@ -59,11 +59,12 @@
                 android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService"
                 android:process=":player"/>
 
-        <receiver android:name=".MyPlayerReceiver" android:exported="true" android:process=":player">
+        <receiver android:name=".receiver.MyPlayerReceiver" android:exported="true" android:process=":player">
             <intent-filter>
                 <action android:name="com.app.test.android.Action_Close"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
