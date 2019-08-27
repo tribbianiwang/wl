@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresApi
@@ -18,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.wl.radio.MyApplication
 import com.wl.radio.R
+import com.wl.radio.bean.CollectRadioBean
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
@@ -25,6 +27,7 @@ import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
+import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
@@ -50,6 +53,9 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     var mPlayerManager: XmPlayerManager? = null
 
     var animator: ObjectAnimator? = null
+
+     var playingRadio:Radio?=null
+    lateinit var  collectRadioViewModel:CollectRadioViewModel
 
 
     var broadcastReceiver = object : BroadcastReceiver() {
@@ -84,9 +90,12 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
         //1
         val radioLiveViewModel = ViewModelProviders.of(this).get(RadioLiveViewModel::class.java)
+        collectRadioViewModel=  ViewModelProviders.of(this).get(CollectRadioViewModel::class.java)
+
 
         //2
         lifecycle.addObserver(radioLiveViewModel)
+        lifecycle.addObserver(collectRadioViewModel)
 
         //3
         val queryStatusObserver: Observer<String> = Observer {
@@ -131,12 +140,26 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
         }
 
+        val allCollectRadioObserver:Observer<List<CollectRadioBean>> = Observer {
+            Log.d(TAG,"collectRadioId:size"+it.size)
+            for(i in it.indices){
+                Log.d(TAG,"collectRadioId:"+it[i].radioId+"---"+i)
+            }
+
+        }
+
         //4
 
         radioLiveViewModel.errorMsgLiveData?.observe(this, errorMsgObserver)
         radioLiveViewModel.queryStatusLiveData?.observe(this, queryStatusObserver)
         radioLiveViewModel.radioListLiveData?.observe(this, radioListResultObserver)
         radioLiveViewModel.radioInfoLiveData?.observe(this, radioInfoObserver)
+
+
+        collectRadioViewModel.errorMsgLiveData?.observe(this,errorMsgObserver)
+        collectRadioViewModel.queryStatusLiveData?.observe(this,queryStatusObserver)
+        collectRadioViewModel.allCollectRadioLiveData?.observe(this,allCollectRadioObserver)
+
 
         if (transRadio != null) {
             //从列表中点击进入
@@ -146,7 +169,6 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
         } else {
             if (!(mPlayerManager?.isPlaying ?: false)) {
                 //没有正在播放的广播
-                LogUtils.d(TAG, "transRadio==null")
                 radioLiveViewModel.getXmlyRadios(1, 0, 1)
             } else {
                 //有正在播放的
@@ -164,6 +186,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
+        playingRadio = selectRadio
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
         tvRadioName.text = selectRadio?.programName
         tvTitle.text = selectRadio?.radioName
@@ -175,6 +198,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     }
 
     private fun setViewData(selectRadio: Radio?, isOnlySetView: Boolean) {
+
         if (!isOnlySetView) {
             mPlayerManager?.playActivityRadio(selectRadio)
 
@@ -200,6 +224,17 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
         ivPlayPrevious.setOnClickListener {
             MyApplication.playPreRadio()
+        }
+
+        iv_collect_radio.setOnClickListener {
+            //收藏电台id
+            LogUtils.d(TAG,"radioName:"+playingRadio?.radioName+playingRadio?.dataId)
+            collectRadioViewModel.addCollectRadio(playingRadio?.dataId.toString())
+        }
+
+        ivCover.setOnClickListener{
+            LogUtils.d(TAG,"collectRadio:queryAll")
+            collectRadioViewModel.queryAllCollectRadio()
         }
 
 

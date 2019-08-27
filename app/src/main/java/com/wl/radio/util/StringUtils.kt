@@ -1,9 +1,18 @@
 package com.wl.radio.util
 
 import android.content.Context
+import com.wl.radio.MyApplication
 import java.util.*
 
 object  StringUtils{
+    fun getColor(colorId: Int): Int {
+        return MyApplication.getContext().getResources().getColor(colorId)
+    }
+
+    fun getString(stringId: Int): String {
+        return MyApplication.getContext().getResources().getString(stringId)
+    }
+
     fun getRString(context: Context, id: Int): String {
         return context.resources.getString(id)
     }

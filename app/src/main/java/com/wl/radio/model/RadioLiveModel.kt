@@ -18,7 +18,7 @@ class RadioLiveModel(radioLiveViewModel: DataResultListener<RadioList>) {
 
 
 
-    public fun onDestory(){}
+
 
     public interface DataResultListener<RadioList>{
         fun radioListSuccess(radiolist: com.ximalaya.ting.android.opensdk.model.live.radio.RadioList)
@@ -75,6 +75,6 @@ class RadioLiveModel(radioLiveViewModel: DataResultListener<RadioList>) {
         })
 
     }
-
+    public fun onDestory(){}
 
 }

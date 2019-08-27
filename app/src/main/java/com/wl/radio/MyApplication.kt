@@ -13,6 +13,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.multidex.MultiDexApplication
+import com.wl.radio.dao.CollectRadioDao
 import com.wl.radio.dao.UserDao
 import com.wl.radio.database.AppDataBase
 import com.wl.radio.receiver.MyPlayerReceiver
@@ -54,6 +55,7 @@ class MyApplication : MultiDexApplication() {
         Gloading.debug(BuildConfig.DEBUG)
         Gloading.initDefault(GlobalAdapter())
         userDao = AppDataBase.getInstance(this).userDao()
+        collectRadioDao = AppDataBase.getInstance(this).getCollectRadioDao()
         CommonRequest.getInstanse().init(this, XMLYAPPSECRET);
         XmPlayerManager.getInstance(this).init()
         context = this
@@ -99,6 +101,7 @@ class MyApplication : MultiDexApplication() {
         var radioList: ArrayList<Radio> = ArrayList()
         var  context:Application? = null
        lateinit var userDao: UserDao
+        lateinit var collectRadioDao:CollectRadioDao
         val TAG = "MyApplication"
         fun getContext():Context{
             return context!!

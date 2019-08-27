@@ -5,13 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.wl.radio.bean.CollectRadioBean
 import com.wl.radio.bean.User
+import com.wl.radio.dao.CollectRadioDao
 import com.wl.radio.dao.UserDao
 
-@Database(entities =[User::class],version = 1,exportSchema = false )
+@Database(entities =[User::class,CollectRadioBean::class],version = 1,exportSchema = false )
 abstract class AppDataBase : RoomDatabase() {
     //获取到UserDao
     abstract fun userDao():UserDao
+    //获取收藏电台的CollectRadioDao
+    abstract  fun getCollectRadioDao():CollectRadioDao
 
     companion object{
         @Volatile

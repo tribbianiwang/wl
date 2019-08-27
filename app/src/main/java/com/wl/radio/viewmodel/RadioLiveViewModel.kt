@@ -43,7 +43,7 @@ class RadioLiveViewModel:ViewModel(),LifecycleObserver,RadioLiveModel.DataResult
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestory(){
-
+        radioLiveModel.onDestory()
     }
 
 
