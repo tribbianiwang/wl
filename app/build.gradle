@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -26,6 +27,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
@@ -38,17 +40,40 @@ dependencies {
     implementation 'com.billy.android:gloading:1.0.0'
     implementation 'com.android.support:design:28+'
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    implementation files('src/main/libs/okio-1.8.0.jar')
     implementation files('src/main/libs/XmDownload_1.6.jar')
     implementation files('src/main/libs/TingPhoneOpenSDK_6.2.16.jar')
-    implementation files('src/main/libs/gson-2.8.0.jar')
     implementation files('src/main/libs/XmlyOAuth2SDK_V1.8.jar')
-    implementation files('src/main/libs/okhttp-3.3.1.jar')
     implementation 'com.yanzhenjie:permission:1.1.0'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.1.1'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-5'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-5'
+
+    def room_version = "2.2.0-beta01"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // For Kotlin use kapt instead of annotationProcessor
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "androidx.room:room-guava:$room_version"
+
+    // Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    implementation 'io.reactivex:rxjava:1.1.0'
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.2'
+
 
 }

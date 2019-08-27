@@ -12,6 +12,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import androidx.multidex.MultiDexApplication
+import com.wl.radio.dao.UserDao
+import com.wl.radio.database.AppDataBase
 import com.wl.radio.receiver.MyPlayerReceiver
 import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.APPLICATION_NEXT_SHOW_ACTION
@@ -27,11 +30,12 @@ import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCr
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
 
-class MyApplication : Application() {
+class MyApplication : MultiDexApplication() {
+
+
 
     var broadcastReceiver:BroadcastReceiver = object:BroadcastReceiver(){
         override fun onReceive(context: Context, intent: Intent) {
-            Log.d(TAG,"application:action"+intent.action)
             when(intent.action){
                 APPLICATION_NEXT_SHOW_ACTION-> playNextRadio()
                 APPLICATION_PRE_SHOW_ACTION-> playPreRadio()
@@ -49,6 +53,7 @@ class MyApplication : Application() {
         super.onCreate()
         Gloading.debug(BuildConfig.DEBUG)
         Gloading.initDefault(GlobalAdapter())
+        userDao = AppDataBase.getInstance(this).userDao()
         CommonRequest.getInstanse().init(this, XMLYAPPSECRET);
         XmPlayerManager.getInstance(this).init()
         context = this
@@ -93,6 +98,7 @@ class MyApplication : Application() {
     companion object {
         var radioList: ArrayList<Radio> = ArrayList()
         var  context:Application? = null
+       lateinit var userDao: UserDao
         val TAG = "MyApplication"
         fun getContext():Context{
             return context!!
