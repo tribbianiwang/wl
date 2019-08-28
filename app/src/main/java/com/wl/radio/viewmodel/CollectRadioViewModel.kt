@@ -7,7 +7,7 @@ import com.wl.radio.model.CollectRadioModel
 class CollectRadioViewModel :ViewModel(),LifecycleObserver,CollectRadioModel.DataResultListener{
     var queryStatusLiveData: MutableLiveData<String>?= MutableLiveData()
     var errorMsgLiveData: MutableLiveData<String>?= MutableLiveData()
-    var allCollectRadioLiveData:MutableLiveData<List<CollectRadioBean>>? = MutableLiveData()
+    var allCollectRadioLiveData:MutableLiveData<List<CollectRadioBean>> = MutableLiveData()
     var collectRadioModel = CollectRadioModel(this)
 
     override fun setQueryStatus(status: String) {

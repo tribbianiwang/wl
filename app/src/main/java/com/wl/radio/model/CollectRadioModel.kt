@@ -12,27 +12,28 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CollectRadioModel(dataResultListener:DataResultListener){
+class CollectRadioModel(dataResultListener: DataResultListener) {
 
-    var dataResultListener:DataResultListener
+    var dataResultListener: DataResultListener
+
     init {
         this.dataResultListener = dataResultListener
     }
 
-     interface DataResultListener{
-        fun setQueryStatus(status:String)
-        fun setErrorMsg(msg:String)
-         fun setAllCollectRadio(collectRadios:List<CollectRadioBean>)
+    interface DataResultListener {
+        fun setQueryStatus(status: String)
+        fun setErrorMsg(msg: String)
+        fun setAllCollectRadio(collectRadios: List<CollectRadioBean>)
     }
 
 
-    fun addCollectRadio(radioId:String){
+    fun addCollectRadio(radioId: String) {
         dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
         Observable.create<String> {
-            if(MyApplication.collectRadioDao.queryCollectRadioById(radioId)==null){
+            if (MyApplication.collectRadioDao.queryCollectRadioById(radioId) == null) {
                 MyApplication.collectRadioDao.insertCollectRadio(CollectRadioBean(radioId))
                 it.onNext(Constants.QUERYSTATUSSUCCESS)
-            }else{
+            } else {
                 it.onError(Throwable(StringUtils.getString(R.string.string_already_collect)))
             }
 
@@ -58,13 +59,13 @@ class CollectRadioModel(dataResultListener:DataResultListener){
     }
 
 
-    fun deleteCollectRadio(collectRadioBean:CollectRadioBean){
+    fun deleteCollectRadio(collectRadioBean: CollectRadioBean) {
         dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
         Observable.create<String> {
             MyApplication.collectRadioDao.deleteCollectRadio(collectRadioBean)
             it.onNext(Constants.QUERYSTATUSSUCCESS)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object:Subscriber<String>(){
+            .subscribe(object : Subscriber<String>() {
                 override fun onNext(t: String) {
                     dataResultListener.setQueryStatus(t)
 
@@ -86,18 +87,16 @@ class CollectRadioModel(dataResultListener:DataResultListener){
     }
 
 
-    fun queryAllCollectRadio(){
+    fun queryAllCollectRadio() {
         dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
         Observable.create<List<CollectRadioBean>> {
             it.onNext(MyApplication.collectRadioDao.queryAllCollectRadio())
 
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object:Subscriber<List<CollectRadioBean>>()
-            {
+            .subscribe(object : Subscriber<List<CollectRadioBean>>() {
                 override fun onNext(t: List<CollectRadioBean>) {
                     dataResultListener.setQueryStatus(Constants.QUERYSTATUSSUCCESS)
                     dataResultListener.setAllCollectRadio(t)
-
 
 
                 }
@@ -115,6 +114,5 @@ class CollectRadioModel(dataResultListener:DataResultListener){
     }
 
 
-
-    public fun onDestory(){}
+    public fun onDestory() {}
 }
