@@ -76,5 +76,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.4.2'
 
     implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta05'
-
+    compile 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
 }

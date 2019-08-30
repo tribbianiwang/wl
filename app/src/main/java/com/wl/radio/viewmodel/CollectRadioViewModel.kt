@@ -1,5 +1,6 @@
 package com.wl.radio.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.wl.radio.bean.CollectRadioBean
 import com.wl.radio.model.CollectRadioModel
@@ -21,6 +22,7 @@ class CollectRadioViewModel :ViewModel(),LifecycleObserver,CollectRadioModel.Dat
     }
 
     override fun setAllCollectRadio(collectRadios: List<CollectRadioBean>) {
+        Log.d("viewmodescollect","setAllCollectRadio")
         allCollectRadioLiveData?.value = collectRadios
     }
 

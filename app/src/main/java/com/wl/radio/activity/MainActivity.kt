@@ -29,6 +29,7 @@ import android.os.Build
 
 
 import android.net.Uri
+import android.util.Log
 
 import android.widget.Toast
 
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
 
 
     private fun initViewPagerAndTablayout() {
+        Log.d("mainActivity","initViewPagerAndTablayout")
         var vpFragments: ArrayList<Fragment> = ArrayList<Fragment>()
         vpFragments.add(HomeFragment())
         vpFragments.add(NavigationFragment())

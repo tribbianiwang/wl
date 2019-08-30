@@ -15,12 +15,17 @@ import com.wl.radio.util.RvItemLongClickListener
 import com.wl.radio.util.StringUtils.formatPlayCount
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
+import kotlinx.android.synthetic.main.layout_rv_collect_radio.view.*
 import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.*
+import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.ivPlayWave
+import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.ivRadioLogo
+import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.tvPeopleTimes
+import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.tvRadioName
+import kotlinx.android.synthetic.main.layout_rv_item_home_radio.view.tvShowName
 
 class RvCollectAdapter: RecyclerView.Adapter<ViewHolder>{
 
 
-    lateinit var context: Context
     val TAG="RvHomeAdapter"
 
     var recordList:MutableList<Radio>?=null
@@ -28,14 +33,19 @@ class RvCollectAdapter: RecyclerView.Adapter<ViewHolder>{
 
     var selectDataId:Long =0
 
-    private var mItemLongListener: RvItemLongClickListener? = null
-    private var mItemClickListener: RvItemClickListener? = null
+     var mItemClickListener: RvItemClickListener? = null
+
+    interface OnDeleteItemListener{
+        fun deleteItem(position:Int)
+    }
+
+    var onDeleteItemListener:OnDeleteItemListener?=null
+
+
     constructor(
-        context: Context?,
         recordList: MutableList<Radio>?
 
     ) : super() {
-        this.context = context!!
         this.recordList = recordList;
 
     }
@@ -43,8 +53,8 @@ class RvCollectAdapter: RecyclerView.Adapter<ViewHolder>{
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.layout_rv_item_home_radio, parent, false)
-        return ViewHolder(view, mItemClickListener, mItemLongListener)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_rv_collect_radio, parent, false)
+        return ViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -61,7 +71,7 @@ class RvCollectAdapter: RecyclerView.Adapter<ViewHolder>{
                 it
             )
         }
-        recordList?.get(position)?.coverUrlLarge?.let { ImgUtils.showImage(context, it,holder.itemView.ivRadioLogo) }
+        recordList?.get(position)?.coverUrlLarge?.let { ImgUtils.showImage(holder.itemView.context, it,holder.itemView.ivRadioLogo) }
 
 
 
@@ -75,44 +85,32 @@ class RvCollectAdapter: RecyclerView.Adapter<ViewHolder>{
         }
 
 
+        holder.itemView.ll_content.setOnClickListener {
+            mItemClickListener?.onItemClick(it,position)
+
+        }
+
+        holder.itemView.bt_delete.setOnClickListener {
+            onDeleteItemListener?.deleteItem(position)
+        }
+
+
 
     }
 
 
     inner class ViewHolder(
-        itemView: View,
-        private val mListener: RvItemClickListener?,
-        private val mLongListener: RvItemLongClickListener?
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
+        itemView: View
+
+    ) : RecyclerView.ViewHolder(itemView){
 
 
 
-        init {
-
-            itemView.setOnClickListener(this)
-            itemView.setOnLongClickListener(this)
 
 
-        }
 
-        override fun onClick(v: View) {
-            mListener?.onItemClick(v, adapterPosition)
-        }
-
-        override fun onLongClick(v: View): Boolean {
-            mLongListener?.onItemLongClick(v, adapterPosition)
-            return true
-        }
 
     }
 
-
-    fun setOnItemClickListener(listener: RvItemClickListener) {
-        this.mItemClickListener = listener
-    }
-
-    fun setOnItemLongClickListener(listener: RvItemLongClickListener) {
-        this.mItemLongListener = listener
-    }
 
 }

@@ -2,6 +2,7 @@ package com.wl.radio.model
 
 import android.provider.ContactsContract
 import android.provider.SyncStateContract
+import android.util.Log
 import com.wl.radio.MyApplication
 import com.wl.radio.R
 import com.wl.radio.bean.CollectRadioBean
@@ -60,15 +61,16 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
 
 
     fun deleteCollectRadio(collectRadioBean: CollectRadioBean) {
+
         dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
         Observable.create<String> {
             MyApplication.collectRadioDao.deleteCollectRadio(collectRadioBean)
-            it.onNext(Constants.QUERYSTATUSSUCCESS)
+            it.onNext(Constants.QUERYDELETESUCCESS)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Subscriber<String>() {
                 override fun onNext(t: String) {
                     dataResultListener.setQueryStatus(t)
-
+                    Log.d("collectRadioModel","success:")
                 }
 
                 override fun onCompleted() {
@@ -77,6 +79,7 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
                 }
 
                 override fun onError(e: Throwable) {
+                    Log.e("collectRadioModel","error:"+e.message.toString())
                     dataResultListener.setQueryStatus(Constants.QUERYSTATUSFAILED)
                     dataResultListener.setErrorMsg(e.message.toString())
 

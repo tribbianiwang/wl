@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true">
+    <LinearLayout
+            android:foreground="?selectableItemBackground"
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_margin_left"
+
+                >
+
+            <ImageView
+                    android:id="@+id/ivRadioLogo"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_radio_test" />
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_margin_left"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/tvRadioName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="北京外语广播"
+                        android:textColor="@color/design_text_black"
+                        android:textSize="@dimen/small_text_size" />
+
+                <TextView
+                        android:id="@+id/tvShowName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/app_margin_small"
+                        android:ellipsize="end"
+                        android:maxEms="15"
+                        android:singleLine="true"
+                        android:text="正在直播:《央广车友会》"
+                        android:textColor="@color/design_text_gray"
+                        android:textSize="@dimen/micro_text_size"
+
+                        />
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/app_margin_small"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/icon_play_line" />
+
+
+                    <TextView
+                            android:id="@+id/tvPeopleTimes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/app_margin_small"
+                            android:text="收听人数:495.0万"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/micro_small_text_size" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/ivPlayWave"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/app_margin_small"
+                    android:layout_marginRight="@dimen/app_margin_small"
+                    android:background="@drawable/anim_wave_show"
+                    android:scaleType="fitXY" />
+
+
+            <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/item_arrow"
+
+                    />
+
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_white" />
+    </LinearLayout>
+
+
+    <Button
+            android:id="@+id/bt_delete"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="@color/font_red"
+            android:text="@string/string_delete"
+            android:textColor="@android:color/white"/>
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

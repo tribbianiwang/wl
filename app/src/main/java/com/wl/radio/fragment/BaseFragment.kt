@@ -151,7 +151,7 @@ open class BaseFragment : ImmersionFragment() {
     }
 
 
-    fun onLoadRetry() {
+    open fun onLoadRetry() {
         // override this method in subclass to do retry task
     }
 
@@ -160,6 +160,7 @@ open class BaseFragment : ImmersionFragment() {
         if (mHolder != null) {
             mHolder!!.showLoading()
         }
+
 
 
     }
