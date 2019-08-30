@@ -11,82 +11,81 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wl.radio.MyApplication
-import com.wl.radio.R
 import com.wl.radio.activity.PlayingActivity
 import com.wl.radio.adapter.RvCollectAdapter
-import com.wl.radio.adapter.RvHomeAdapter
 import com.wl.radio.bean.CollectRadioBean
 import com.wl.radio.util.Constants
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.RvItemClickListener
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
-import kotlinx.android.synthetic.main.layout_fragment_collection.view.*
-import com.ximalaya.ting.android.opensdk.model.live.radio.RadioListById
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
-import java.util.ArrayList
+import kotlinx.android.synthetic.main.layout_fragment_collection.view.*
+import java.util.*
 
 
-class CollectingFragment : Fragment() {
+class CollectingFragment : BaseFragment() {
     lateinit var collectRadioViewModel: CollectRadioViewModel
     lateinit var radioLiveViewModel: RadioLiveViewModel
     val TAG = "CollectingFragment"
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView:View =View.inflate(context, com.wl.radio.R.layout.layout_fragment_collection,null)
-        contentView.rvCollection.layoutManager=LinearLayoutManager(context)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+
+
+
+        val contentView: View =
+            View.inflate(context, com.wl.radio.R.layout.layout_fragment_collection, null)
+        contentView.rvCollection.layoutManager = LinearLayoutManager(context)
+        val initLoadingStatusView = initLoadingStatusView(contentView)
+
+
+
 //        contentView.rvCollection.adapter=(RvHomeAdapter(context, recordList))
         //1
-        collectRadioViewModel =  ViewModelProviders.of(this).get(CollectRadioViewModel::class.java)
-        radioLiveViewModel =ViewModelProviders.of(this).get(RadioLiveViewModel::class.java)
+        collectRadioViewModel = ViewModelProviders.of(this).get(CollectRadioViewModel::class.java)
+        radioLiveViewModel = ViewModelProviders.of(this).get(RadioLiveViewModel::class.java)
 
         //2
         lifecycle.addObserver(collectRadioViewModel)
         lifecycle.addObserver(radioLiveViewModel)
 
         //3
-        val queryStatusObserver: Observer<String> = Observer {
-
-            when (it) {
-                Constants.QUERYSTATUSLOADING -> LogUtils.d(TAG, Constants.QUERYSTATUSLOADING)
-                Constants.QUERYSTATUSFAILED -> LogUtils.d(TAG, Constants.QUERYSTATUSFAILED)
-                Constants.QUERYSTATUSSUCCESS -> LogUtils.d(TAG, Constants.QUERYSTATUSSUCCESS)
-                Constants.QUERYSTATUSEMPTY->LogUtils.d(TAG, Constants.QUERYSTATUSEMPTY)
-            }
-
-        }
-
-        val errorMsgObserver: Observer<String> = Observer {
-            LogUtils.d(TAG, it)
 
 
-        }
 
-        val allCollectRadioObserver:Observer<List<CollectRadioBean>> = Observer {
-            Log.d(TAG,"collectRadioId:size"+it.size)
+
+        val allCollectRadioObserver: Observer<List<CollectRadioBean>> = Observer {
+            Log.d(TAG, "collectRadioId:size" + it.size)
             var sbRadioIds = StringBuffer()
-            for(i in it.indices){
-                Log.d(TAG,"collectRadioId:"+it[i].radioId+"---"+i)
-                if(i==(it.size-1)){
+            for (i in it.indices) {
+                Log.d(TAG, "collectRadioId:" + it[i].radioId + "---" + i)
+                if (i == (it.size - 1)) {
                     sbRadioIds.append(it[i].radioId)
-                }else{
-                    sbRadioIds.append(it[i].radioId+",")
+                } else {
+                    sbRadioIds.append(it[i].radioId + ",")
                 }
 
             }
+            if(sbRadioIds==null||sbRadioIds.length==0){
+                showEmpty()
+            }else{
+                radioLiveViewModel.getRadioInfos(sbRadioIds.toString())
+            }
 
-            radioLiveViewModel.getRadioInfos(sbRadioIds.toString())
+
 
 
         }
 
-        var radioListByIdsObserver = object: Observer<List<Radio>>{
+        var radioListByIdsObserver = object : Observer<List<Radio>> {
             override fun onChanged(radioList: List<Radio>) {
-                LogUtils.d(TAG,"sbradioIds:"+radioList.toString())
-                var rvCollectAdapter = RvCollectAdapter(context,radioList as MutableList<Radio>)
+                LogUtils.d(TAG, "sbradioIds:" + radioList.toString())
+                var rvCollectAdapter = RvCollectAdapter(context, radioList as MutableList<Radio>)
                 contentView.rvCollection.adapter = rvCollectAdapter
 
                 rvCollectAdapter.setOnItemClickListener(object : RvItemClickListener {
@@ -95,9 +94,9 @@ class CollectingFragment : Fragment() {
 
                         MyApplication.refreshRadioList(radioList as ArrayList)
                         var intent: Intent = Intent(context, PlayingActivity::class.java)
-                        rvCollectAdapter?.selectDataId = radioList?.get(position)?.dataId?:0
+                        rvCollectAdapter?.selectDataId = radioList?.get(position)?.dataId ?: 0
                         rvCollectAdapter?.notifyDataSetChanged()
-                        intent.putExtra(Constants.TRANSRADIO,radioList?.get(position))
+                        intent.putExtra(Constants.TRANSRADIO, radioList?.get(position))
 
 
                         startActivity(intent)
@@ -111,13 +110,13 @@ class CollectingFragment : Fragment() {
 
 
         //4
-        collectRadioViewModel.allCollectRadioLiveData.observe(this,allCollectRadioObserver)
-        collectRadioViewModel.queryStatusLiveData?.observe(this,queryStatusObserver)
-        collectRadioViewModel.errorMsgLiveData?.observe(this,errorMsgObserver)
+        collectRadioViewModel.allCollectRadioLiveData.observe(this, allCollectRadioObserver)
+        collectRadioViewModel.queryStatusLiveData?.observe(this, queryStatusObserver)
+        collectRadioViewModel.errorMsgLiveData?.observe(this, errorMsgObserver)
 
-        radioLiveViewModel.queryStatusLiveData?.observe(this,queryStatusObserver)
+        radioLiveViewModel.queryStatusLiveData?.observe(this, gLoadingqueryStatusObserver)
         radioLiveViewModel.errorMsgLiveData?.observe(this, errorMsgObserver)
-        radioLiveViewModel.radiolistFromIds?.observe(this,radioListByIdsObserver)
+        radioLiveViewModel.radiolistFromIds?.observe(this, radioListByIdsObserver)
 
 
         collectRadioViewModel.queryAllCollectRadio()
@@ -126,7 +125,7 @@ class CollectingFragment : Fragment() {
 
 
 
-       return contentView
+        return initLoadingStatusView?.wrapper
 
     }
 }

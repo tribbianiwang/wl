@@ -40,6 +40,18 @@
         <item name="textAllCaps">true</item>
     </style>
 
+
+    <!--对话框样式-->
+    <style name="primaryDialogStyle" parent="Theme.AppCompat.Dialog">
+        <!--背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--没有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--背景昏暗-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
     <style name="NotificationText" parent="android:TextAppearance.StatusBar.EventContent" />
     <style name="NotificationTitle" parent="android:TextAppearance.StatusBar.EventContent.Title" />
 </resources>
