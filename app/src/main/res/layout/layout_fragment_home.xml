@@ -12,6 +12,7 @@
         <include layout="@layout/layout_home_rv_head"/>
 
         <RelativeLayout
+                android:id="@+id/rl_play_history"
                 android:paddingTop="@dimen/app_margin_left"
                 android:paddingBottom="@dimen/app_margin_left"
                 android:layout_marginTop="@dimen/app_margin_left"
@@ -50,7 +51,9 @@
             />
 
         </RelativeLayout>
-        <View android:layout_width="match_parent" android:layout_height="0.5dp"
+        <View
+                android:id="@+id/view_line_play_history"
+                android:layout_width="match_parent" android:layout_height="0.5dp"
               android:background="@color/gray_white"
         />
         <androidx.recyclerview.widget.RecyclerView

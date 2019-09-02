@@ -66,11 +66,7 @@ class CollectingFragment : BaseFragment() {
 
         if(allCollectRadioObserver==null){
             allCollectRadioObserver= Observer {
-
-                Log.d(TAG,"collectRadioViewmodel"+collectRadioViewModel)
-
                 collectRadioBeans = it as MutableList<CollectRadioBean>?
-                Log.d(TAG,"success:dao:size"+collectRadioBeans?.size)
                 var sbRadioIds = StringBuffer()
                 for (i in it.indices) {
                     if (i == (it.size - 1)) {
@@ -96,7 +92,6 @@ class CollectingFragment : BaseFragment() {
         if(radioListByIdsObserver==null){
             radioListByIdsObserver =   object : Observer<List<Radio>> {
                 override fun onChanged(radioList: List<Radio>) {
-                    Log.d(TAG,"success:server:size"+radioList?.size+"---"+this)
                     collectRadios=radioList as MutableList<Radio>
 
                     rvCollectAdapter = RvCollectAdapter(collectRadios as MutableList<Radio>)
@@ -121,7 +116,6 @@ class CollectingFragment : BaseFragment() {
                         override fun deleteItem(position: Int) {
                             deletePosition = position
                             if(collectRadioViewModel!=null){
-                                Log.d(TAG,"startdeleteBeansSize"+collectRadioBeans?.size)
                                 collectRadioBeans?.get(position)?.let {
                                     collectRadioViewModel.deleteCollectRadio(
                                         it
@@ -152,8 +146,6 @@ class CollectingFragment : BaseFragment() {
                         collectRadioBeans?.removeAt(deletePosition)
                         collectRadios?.removeAt(deletePosition)
                         rvCollectAdapter?.notifyItemRemoved(deletePosition)
-
-                        Log.d(TAG,"deleteSuccesssize"+collectRadioBeans?.size.toString())
                         rvCollectAdapter?. notifyItemRangeChanged(deletePosition, collectRadioBeans?.size?:0 - deletePosition);
 
                         if(collectRadioBeans?.size==0||collectRadios?.size==0){
@@ -179,7 +171,7 @@ class CollectingFragment : BaseFragment() {
 
         collectRadioViewModel.queryAllCollectRadio()
 
-        Log.d(TAG,"init:oncreate")
+
 
 
 
@@ -190,7 +182,6 @@ class CollectingFragment : BaseFragment() {
 
 
     override fun onLoadRetry() {
-        Log.d(TAG,"init:onLoadRetry")
        if(collectRadioViewModel!=null){
            collectRadioViewModel.queryAllCollectRadio()
        }

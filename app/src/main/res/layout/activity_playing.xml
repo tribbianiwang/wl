@@ -74,7 +74,7 @@
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                           android:orientation="horizontal"
-                          android:layout_marginTop="@dimen/app_margin_small"
+                          android:layout_marginTop="@dimen/app_margin_left"
                           android:gravity="center"
             >
                 <ImageView android:layout_width="22dp" android:layout_height="22dp"
@@ -83,10 +83,11 @@
                 />
 
                 <ImageView android:layout_width="22dp" android:layout_height="22dp"
-                           android:src="@drawable/icon_favorites"
+                           android:src="@drawable/icon_heart_gray"
                            android:scaleType="fitCenter"
                            android:layout_marginLeft="@dimen/app_margin_right"
                            android:id="@+id/iv_collect_radio"
+                        android:tag="@string/unselected"
 
                 />
 
@@ -109,6 +110,7 @@
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                           android:orientation="horizontal"
                           android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/app_margin_left"
             >
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                           android:text="00:00"

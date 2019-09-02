@@ -24,6 +24,11 @@ import com.wl.radio.util.T
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 
 
+
+
+
+
+
 open class BaseFragment : ImmersionFragment() {
 
     lateinit var mContext: Activity
@@ -91,6 +96,28 @@ open class BaseFragment : ImmersionFragment() {
 
 
     var errorMsgObserver: Observer<String> = Observer { s -> T.showShort(activity!!, s!!) }
+
+    private val isVisibleToUser: Boolean = false
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            // 相当于onResume()方法
+            onFragmentVisible()
+        } else {
+            // 相当于onpause()方法
+            onFragmentInVisible()
+        }
+    }
+
+    open fun onFragmentVisible(){
+
+    }
+
+    open fun onFragmentInVisible(){
+
+    }
+
 
     fun loginOutSuccess() {
 
@@ -222,7 +249,7 @@ open class BaseFragment : ImmersionFragment() {
     fun showProgress(context: Context?) {
         if (context != null && !(context as Activity).isFinishing) {
             if (progressDialog == null) {
-                progressDialog = ProgressDialog(context, R.style.primaryDialogStyle)
+                progressDialog = ProgressDialog(context, com.wl.radio.R.style.primaryDialogStyle)
             }
             progressDialog!!.show()
         }

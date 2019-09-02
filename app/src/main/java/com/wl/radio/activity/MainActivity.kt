@@ -70,6 +70,7 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
 
 //        tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(this);
+//        viewPager.offscreenPageLimit = 5
 
 
     }

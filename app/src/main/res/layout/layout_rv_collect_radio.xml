@@ -116,10 +116,11 @@
 
 
     <Button
+            android:foreground="?selectableItemBackground"
             android:id="@+id/bt_delete"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:background="@color/font_red"
+            android:background="@color/home_red"
             android:text="@string/string_delete"
             android:textColor="@android:color/white"/>
 

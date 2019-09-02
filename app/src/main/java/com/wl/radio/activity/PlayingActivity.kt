@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.wl.radio.MyApplication
 import com.wl.radio.R
 import com.wl.radio.bean.CollectRadioBean
+import com.wl.radio.util.Constants
+import com.wl.radio.util.Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
@@ -27,6 +29,7 @@ import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
+import com.wl.radio.util.StringUtils
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
@@ -61,7 +64,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                RESET_RADIO_IMG_AND_TITLE_ACTION -> {
+                BROADCAST_REFRESH_PLAY_RADIO_HISTORY -> {
                     setTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
                 }
             }
@@ -140,13 +143,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
         }
 
-        val allCollectRadioObserver:Observer<List<CollectRadioBean>> = Observer {
-            Log.d(TAG,"collectRadioId:size"+it.size)
-            for(i in it.indices){
-                Log.d(TAG,"collectRadioId:"+it[i].radioId+"---"+i)
-            }
 
-        }
 
         //4
 
@@ -156,9 +153,6 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
         radioLiveViewModel.radioInfoLiveData?.observe(this, radioInfoObserver)
 
 
-        collectRadioViewModel.errorMsgLiveData?.observe(this,errorMsgObserver)
-        collectRadioViewModel.queryStatusLiveData?.observe(this,queryStatusObserver)
-        collectRadioViewModel.allCollectRadioLiveData?.observe(this,allCollectRadioObserver)
 
 
         if (transRadio != null) {
@@ -187,6 +181,9 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
 
     private fun setTitleAndImg(selectRadio: Radio?) {
         playingRadio = selectRadio
+        playingRadio?.let { MyApplication.addHistoryRadios(it)
+        this@PlayingActivity.sendBroadcast(Intent(Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY))
+        }
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
         tvRadioName.text = selectRadio?.programName
         tvTitle.text = selectRadio?.radioName
@@ -226,15 +223,29 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
             MyApplication.playPreRadio()
         }
 
-        iv_collect_radio.setOnClickListener {
-            //收藏电台id
-            LogUtils.d(TAG,"radioName:"+playingRadio?.radioName+playingRadio?.dataId)
-            collectRadioViewModel.addCollectRadio(playingRadio?.dataId.toString())
-        }
+
 
         ivCover.setOnClickListener{
             LogUtils.d(TAG,"collectRadio:queryAll")
             collectRadioViewModel.queryAllCollectRadio()
+        }
+
+        iv_collect_radio.setOnClickListener{
+            if(iv_collect_radio.getTag().equals(StringUtils.getString(R.string.unselected))){
+                //开始执行收藏
+                iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
+                iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
+                //收藏电台id
+                LogUtils.d(TAG,"radioName:"+playingRadio?.radioName+playingRadio?.dataId)
+                collectRadioViewModel.addCollectRadio(playingRadio?.dataId.toString())
+
+            }else{
+                //开始执行取消收藏
+                iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
+                iv_collect_radio.setTag(StringUtils.getString(R.string.unselected))
+
+            }
+
         }
 
 

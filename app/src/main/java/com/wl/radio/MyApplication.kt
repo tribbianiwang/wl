@@ -17,7 +17,6 @@ import com.wl.radio.dao.CollectRadioDao
 import com.wl.radio.dao.UserDao
 import com.wl.radio.database.AppDataBase
 import com.wl.radio.receiver.MyPlayerReceiver
-import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.APPLICATION_NEXT_SHOW_ACTION
 import com.wl.radio.util.Constants.APPLICATION_PRE_SHOW_ACTION
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
@@ -26,6 +25,7 @@ import com.wl.radio.util.Constants.PRE_SHOW_ACTION
 import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
+import com.wl.radio.util.LogUtils
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
@@ -98,7 +98,8 @@ class MyApplication : MultiDexApplication() {
     }
 
     companion object {
-        var radioList: ArrayList<Radio> = ArrayList()
+        var playingRadioList: ArrayList<Radio> = ArrayList()
+        var historyRadioList:ArrayList<Radio> = ArrayList()
         var  context:Application? = null
        lateinit var userDao: UserDao
         lateinit var collectRadioDao:CollectRadioDao
@@ -107,11 +108,11 @@ class MyApplication : MultiDexApplication() {
             return context!!
         }
         fun playNextRadio(): Radio? {
-            Log.d(TAG,"playNextRadio"+getPlayingRadioIndex()+"radiolistsize--"+ radioList.size)
-            if (radioList.size > 0 && getPlayingRadioIndex() < (radioList.size - 1)) {
-                XmPlayerManager.getInstance(getContext()).playActivityRadio(radioList[getPlayingRadioIndex() + 1])
-                sendUpdateImageAndTitleBroadcast(radioList[getPlayingRadioIndex() + 1])
-                return radioList[getPlayingRadioIndex() + 1]
+            Log.d(TAG,"playNextRadio"+getPlayingRadioIndex()+"radiolistsize--"+ playingRadioList.size)
+            if (playingRadioList.size > 0 && getPlayingRadioIndex() < (playingRadioList.size - 1)) {
+                XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[getPlayingRadioIndex() + 1])
+                sendUpdateImageAndTitleBroadcast(playingRadioList[getPlayingRadioIndex() + 1])
+                return playingRadioList[getPlayingRadioIndex() + 1]
             }else{
                 return null
             }
@@ -121,10 +122,10 @@ class MyApplication : MultiDexApplication() {
 
         fun playPreRadio():Radio?{
             Log.d(TAG,"playPreRadio"+getPlayingRadioIndex())
-            if (radioList.size > 0 && getPlayingRadioIndex() != 0) {
-                XmPlayerManager.getInstance(getContext()).playActivityRadio(radioList[getPlayingRadioIndex() - 1])
-                sendUpdateImageAndTitleBroadcast(radioList[getPlayingRadioIndex()-1])
-                return radioList[getPlayingRadioIndex()-1]
+            if (playingRadioList.size > 0 && getPlayingRadioIndex() != 0) {
+                XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[getPlayingRadioIndex() - 1])
+                sendUpdateImageAndTitleBroadcast(playingRadioList[getPlayingRadioIndex()-1])
+                return playingRadioList[getPlayingRadioIndex()-1]
             }else{
                 return null
             }
@@ -138,10 +139,10 @@ class MyApplication : MultiDexApplication() {
 
 
         fun getPlayingRadioIndex(): Int {
-            for (radioIndex in radioList.indices) {
-                if (radioList[radioIndex].dataId.equals(XmPlayerManager.getInstance(getContext()).currSound.dataId)) {
+            for (radioIndex in playingRadioList.indices) {
+                if (playingRadioList[radioIndex].dataId.equals(XmPlayerManager.getInstance(getContext()).currSound.dataId)) {
                     return radioIndex
-                } else if (radioIndex == (radioList.size - 1)) {
+                } else if (radioIndex == (playingRadioList.size - 1)) {
                     break;
                 }
             }
@@ -150,12 +151,43 @@ class MyApplication : MultiDexApplication() {
 
         fun refreshRadioList(newRadioList:ArrayList<Radio>){
 
-            if(radioList.size>0){
-                radioList.clear()
+            if(playingRadioList.size>0){
+                playingRadioList.clear()
             }
 
-            radioList.addAll(newRadioList)
+            playingRadioList.addAll(newRadioList)
         }
+
+
+        fun addHistoryRadios(radio:Radio){
+
+            if(historyRadioList.size==0){
+                historyRadioList.add(radio)
+            }else if(historyRadioList.contains(radio)){
+              historyRadioList.remove(radio)
+                historyRadioList.add(radio)
+            }else{
+                historyRadioList.add(radio)
+            }
+
+        }
+
+        fun getHistoryRadios():List<Radio>{
+            LogUtils.d("MyApplication-history-size","raidios"+historyRadioList.size)
+            if(historyRadioList.size>=5){
+
+
+                return historyRadioList.reversed().subList(0,
+                    5) as List<Radio>
+            }else {
+
+                return historyRadioList
+            }
+
+
+        }
+
+
 
     }
 
