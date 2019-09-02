@@ -56,13 +56,18 @@
                 android:layout_width="match_parent" android:layout_height="0.5dp"
               android:background="@color/gray_white"
         />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rvPlayHistory"
                 android:nestedScrollingEnabled="false"
         ></androidx.recyclerview.widget.RecyclerView>
-
+        </RelativeLayout>
         <RelativeLayout
 
                 android:id="@+id/rlCityMore"
@@ -108,13 +113,18 @@
         <View android:layout_width="match_parent" android:layout_height="0.5dp"
               android:background="@color/gray_white"
         />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rvCity"
                 android:nestedScrollingEnabled="false"
         ></androidx.recyclerview.widget.RecyclerView>
-
+        </RelativeLayout>
 
         <RelativeLayout
                 android:paddingTop="@dimen/app_margin_left"
@@ -159,6 +169,11 @@
         <View android:layout_width="match_parent" android:layout_height="0.5dp"
               android:background="@color/gray_white"
         />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,7 +181,7 @@
                 android:nestedScrollingEnabled="false"
         ></androidx.recyclerview.widget.RecyclerView>
 
-
+        </RelativeLayout>
     </LinearLayout>
 
 

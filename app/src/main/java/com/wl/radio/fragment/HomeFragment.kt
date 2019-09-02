@@ -60,6 +60,9 @@ class HomeFragment : BaseFragment() {
     var contentView: View? = null
 
     var rvHistoryAdapter: RvHomeAdapter? = null
+    var rvCityAdapter: RvHomeAdapter? = null
+    var rvRankAdapter: RvHomeAdapter? = null
+
 
     var playRadioList: ArrayList<Radio> = ArrayList<Radio>()
 
@@ -89,7 +92,7 @@ class HomeFragment : BaseFragment() {
         rvRank.layoutManager = LinearLayoutManager(context);
 
 
-
+        setRvHistoryAdapter()
 
         llRadioLocal.setOnClickListener {
             var intent: Intent = Intent(activity, NormalRadioListActivity::class.java)
@@ -164,8 +167,11 @@ class HomeFragment : BaseFragment() {
 //                showLoadSuccess()
                 LogUtils.d(TAG,"rvrank-data-size:"+it?.radios?.size)
 
-                rvRank.adapter = RvHomeAdapter(context, it?.radios)
-                (rvRank.adapter as RvHomeAdapter).setOnItemClickListener(object :
+                rvRankAdapter = RvHomeAdapter(context, it?.radios)
+                rvRank.adapter = rvRankAdapter
+
+                LogUtils.d(TAG,"rvrank-data-size:after"+  (rvRankAdapter)?.itemCount)
+                rvRankAdapter?.setOnItemClickListener(object :
                     RvItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
 
@@ -190,9 +196,10 @@ class HomeFragment : BaseFragment() {
             } else {
 //                showLoadSuccess()
 
-                rvCity.adapter = RvHomeAdapter(context, it?.radios?.subList(0, 3))
+                rvCityAdapter = RvHomeAdapter(context, it?.radios?.subList(0, 3))
+                rvCity.adapter = rvCityAdapter
 
-                (rvCity.adapter as RvHomeAdapter).setOnItemClickListener(object :
+                rvCityAdapter?.setOnItemClickListener(object :
                     RvItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
 
@@ -255,7 +262,10 @@ class HomeFragment : BaseFragment() {
 
 
     override fun onFragmentVisible() {
-        LogUtils.d(TAG, "onFragmentVisible")
+
+        if(rvRankAdapter!=null){
+            LogUtils.d(TAG, "onFragmentVisible"+rvRankAdapter?.itemCount)
+        }
 
     }
 
@@ -264,10 +274,10 @@ class HomeFragment : BaseFragment() {
     }
 
     public fun refreshWaveAnim(dataId: Long) {
-        (rvCity.adapter as RvHomeAdapter)?.selectDataId = dataId
-        (rvRank.adapter as RvHomeAdapter)?.selectDataId = dataId
-        (rvCity.adapter as RvHomeAdapter)?.notifyDataSetChanged()
-        (rvRank.adapter as RvHomeAdapter)?.notifyDataSetChanged()
+        rvRankAdapter?.selectDataId = dataId
+        rvCityAdapter?.selectDataId = dataId
+        rvRankAdapter?.notifyDataSetChanged()
+        rvCityAdapter?.notifyDataSetChanged()
 
     }
 
