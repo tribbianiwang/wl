@@ -42,6 +42,9 @@ object Constants {
     val TOAST_DOUBLE_TIME_LIMIT = 1000
 
 
+    const val TRANS_PLAYING_RADIO = "TRANS_PLAYING_RADIO"
+
+
     val TRANSRADIO = "transradio"
 
      val CITYCODEHENAN=410000

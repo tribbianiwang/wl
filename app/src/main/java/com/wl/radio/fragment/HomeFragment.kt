@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +27,7 @@ import com.wl.radio.util.Constants.RADIOTYPE
 import com.wl.radio.util.Constants.RADIOTYPECOUNTRY
 import com.wl.radio.util.Constants.RADIOTYPEINTERNET
 import com.wl.radio.util.Constants.RADIOTYPEPROVINCE
+import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.RvItemClickListener
 import com.wl.radio.viewmodel.RadioPullRefreshViewModel
@@ -46,6 +46,8 @@ class HomeFragment : BaseFragment() {
                     Log.d(TAG,"start_refresh_play_radio")
                     setRvHistoryAdapter()
 
+                    playingRadio = intent.getParcelableExtra<Radio>(TRANS_PLAYING_RADIO)
+                    playingRadio?.dataId?.let { refreshWaveAnim(it) }
                 }
             }
 
@@ -57,14 +59,15 @@ class HomeFragment : BaseFragment() {
     val TAG = HomeFragment::class.java.simpleName
     var radioPullRefreshViewModel: RadioPullRefreshViewModel? = null
 
+    var selectRadioId:Long=0
 
-
+    var playingRadio:Radio?=null
     var rvHistoryAdapter: RvHomeAdapter? = null
     var rvCityAdapter: RvHomeAdapter? = null
     var rvRankAdapter: RvHomeAdapter? = null
 
 
-    var playRadioList: ArrayList<Radio> = ArrayList<Radio>()
+    var playRadioHistoryList: ArrayList<Radio> = ArrayList<Radio>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,13 +164,7 @@ class HomeFragment : BaseFragment() {
                     RvItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
 
-                        refreshWaveAnim(it?.radios?.get(position)?.dataId ?: 0)
-                        MyApplication.refreshRadioList(it.radios as ArrayList<Radio>)
-                        var intent: Intent = Intent(activity, PlayingActivity::class.java)
-
-                        intent.putExtra(Constants.TRANSRADIO, it?.radios?.get(position))
-
-                        startActivity(intent)
+                        it?.radios?.get(position)?.let { it1 -> toPlayingActivity(it1,it.radios as ArrayList<Radio>) }
                     }
 
                 })
@@ -189,12 +186,7 @@ class HomeFragment : BaseFragment() {
                     RvItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
 
-
-                        refreshWaveAnim(it?.radios?.get(position)?.dataId ?: 0)
-                        MyApplication.refreshRadioList(it.radios as ArrayList<Radio>)
-                        var intent: Intent = Intent(activity, PlayingActivity::class.java)
-                        intent.putExtra(Constants.TRANSRADIO, it?.radios?.get(position))
-                        startActivity(intent)
+                        it?.radios?.get(position)?.let { it1 -> toPlayingActivity(it1,it.radios as ArrayList<Radio>) }
                     }
 
                 })
@@ -242,19 +234,30 @@ class HomeFragment : BaseFragment() {
 
 
             if (rvHistoryAdapter == null) {
-                playRadioList.addAll(MyApplication.getHistoryRadios())
-                rvHistoryAdapter = RvHomeAdapter(context, playRadioList)
+                playRadioHistoryList.addAll(MyApplication.getHistoryRadios())
+                rvHistoryAdapter = RvHomeAdapter(context, playRadioHistoryList)
+                rvHistoryAdapter?.selectDataId = selectRadioId
                 rvPlayHistory.adapter = rvHistoryAdapter
 
 
 
+
+
             } else {
-                playRadioList.clear()
-                playRadioList.addAll(MyApplication.getHistoryRadios())
+                playRadioHistoryList.clear()
+                playRadioHistoryList.addAll(MyApplication.getHistoryRadios())
                 rvHistoryAdapter?.notifyDataSetChanged()
 
 
             }
+
+            rvHistoryAdapter?.setOnItemClickListener(object :RvItemClickListener{
+                override fun onItemClick(view: View, position: Int) {
+                    toPlayingActivity(playRadioHistoryList[position],playRadioHistoryList)
+
+                }
+
+            })
 
 
         }
@@ -276,15 +279,26 @@ class HomeFragment : BaseFragment() {
     }
 
     public fun refreshWaveAnim(dataId: Long) {
+        selectRadioId = dataId
         rvRankAdapter?.selectDataId = dataId
         rvCityAdapter?.selectDataId = dataId
+        rvHistoryAdapter?.selectDataId = dataId
         rvRankAdapter?.notifyDataSetChanged()
         rvCityAdapter?.notifyDataSetChanged()
+        rvHistoryAdapter?.notifyDataSetChanged()
+
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
         context?.unregisterReceiver(innerBroadcastReceiver)
+    }
+
+    fun toPlayingActivity(radio:Radio,radioList:ArrayList<Radio>){
+        MyApplication.refreshRadioList(radioList)
+        var intent: Intent = Intent(activity, PlayingActivity::class.java)
+        intent.putExtra(Constants.TRANSRADIO, radio)
+        startActivity(intent)
     }
 }

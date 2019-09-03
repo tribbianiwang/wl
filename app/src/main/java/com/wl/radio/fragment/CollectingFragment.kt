@@ -1,6 +1,9 @@
 package com.wl.radio.fragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +35,23 @@ class CollectingFragment : BaseFragment() {
     var collectRadioBeans:MutableList<CollectRadioBean>?=null
     var rvCollectAdapter: RvCollectAdapter?=null
     var deletePosition = -5
+
+    var playingRadio:Radio?=null
+    var innerBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY -> {
+
+
+                    playingRadio = intent.getParcelableExtra<Radio>(Constants.TRANS_PLAYING_RADIO)
+                    playingRadio?.dataId?.let { refreshWaveAnim(it) }
+                }
+            }
+
+        }
+
+    }
+
 
 
     val TAG = "CollectingFragment"
@@ -182,7 +202,9 @@ class CollectingFragment : BaseFragment() {
 
         collectRadioViewModel.queryAllCollectRadio()
 
-
+        var intentFilter = IntentFilter()
+        intentFilter.addAction(Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
+        context?.registerReceiver(innerBroadcastReceiver, intentFilter)
 
 
 
@@ -203,5 +225,16 @@ class CollectingFragment : BaseFragment() {
        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        context?.unregisterReceiver(innerBroadcastReceiver)
+    }
 
+    public fun refreshWaveAnim(dataId: Long) {
+        rvCollectAdapter?.selectDataId = dataId
+        rvCollectAdapter?.notifyDataSetChanged()
+
+
+
+    }
 }

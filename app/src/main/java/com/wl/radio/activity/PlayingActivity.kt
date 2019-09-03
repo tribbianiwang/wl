@@ -27,6 +27,7 @@ import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
 import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
+import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.StringUtils
@@ -182,7 +183,12 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     private fun setTitleAndImg(selectRadio: Radio?) {
         playingRadio = selectRadio
         playingRadio?.let { MyApplication.addHistoryRadios(it)
-        this@PlayingActivity.sendBroadcast(Intent(Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY))
+
+            var intent  = Intent()
+            intent.setAction(BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
+            intent.putExtra(TRANS_PLAYING_RADIO,selectRadio)
+            this@PlayingActivity.sendBroadcast(intent)
+
         }
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
         tvRadioName.text = selectRadio?.programName
