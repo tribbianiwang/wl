@@ -33,7 +33,7 @@ import com.wl.radio.util.Constants.BROADCASTSELECTRADIOIDCHANGE
 import android.content.IntentFilter
 import com.wl.radio.MyApplication
 import com.wl.radio.util.Constants.SELECTRADIOID
-import com.wl.radio.util.Constants.TRANSRADIO
+
 
 
 class NormalRadioListFragment : Fragment() {

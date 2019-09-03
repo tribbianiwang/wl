@@ -222,7 +222,6 @@ class HomeFragment : BaseFragment() {
 
 
     private fun setRvHistoryAdapter() {
-        Log.d("HomeFragment:", "setRvHistoryAdapter-size:" + MyApplication.historyRadioList.size)
         if (MyApplication.historyRadioList.size == 0) {
             rl_play_history.visibility = View.GONE
             view_line_play_history.visibility = View.GONE

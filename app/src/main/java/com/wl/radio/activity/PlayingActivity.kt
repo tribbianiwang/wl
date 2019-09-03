@@ -65,7 +65,8 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
     var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                BROADCAST_REFRESH_PLAY_RADIO_HISTORY -> {
+                RESET_RADIO_IMG_AND_TITLE_ACTION -> {
+
                     setTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
                 }
             }

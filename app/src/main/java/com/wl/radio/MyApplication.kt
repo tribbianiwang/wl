@@ -17,6 +17,7 @@ import com.wl.radio.dao.CollectRadioDao
 import com.wl.radio.dao.UserDao
 import com.wl.radio.database.AppDataBase
 import com.wl.radio.receiver.MyPlayerReceiver
+import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.APPLICATION_NEXT_SHOW_ACTION
 import com.wl.radio.util.Constants.APPLICATION_PRE_SHOW_ACTION
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
@@ -112,6 +113,8 @@ class MyApplication : MultiDexApplication() {
             if (playingRadioList.size > 0 && getPlayingRadioIndex() < (playingRadioList.size - 1)) {
                 XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[getPlayingRadioIndex() + 1])
                 sendUpdateImageAndTitleBroadcast(playingRadioList[getPlayingRadioIndex() + 1])
+
+
                 return playingRadioList[getPlayingRadioIndex() + 1]
             }else{
                 return null
@@ -135,6 +138,15 @@ class MyApplication : MultiDexApplication() {
             var intent = Intent(RESET_RADIO_IMG_AND_TITLE_ACTION)
             intent.putExtra(TRANSRADIO,radio)
             getContext().sendBroadcast(intent)
+
+            radio.let { MyApplication.addHistoryRadios(it)
+
+                var intent  = Intent()
+                intent.setAction(Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
+                intent.putExtra(Constants.TRANS_PLAYING_RADIO,radio)
+                context?.sendBroadcast(intent)
+
+            }
         }
 
 
