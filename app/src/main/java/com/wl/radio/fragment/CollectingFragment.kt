@@ -32,9 +32,8 @@ class CollectingFragment : BaseFragment() {
     var collectRadioBeans:MutableList<CollectRadioBean>?=null
     var rvCollectAdapter: RvCollectAdapter?=null
     var deletePosition = -5
-    var allCollectRadioObserver: Observer<List<CollectRadioBean>>?=null
-    var radioListByIdsObserver :Observer<List<Radio>>?=null
-    var queryStatusChildObserver: Observer<String>?=null
+
+
     val TAG = "CollectingFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,8 +63,8 @@ class CollectingFragment : BaseFragment() {
 
 
 
-        if(allCollectRadioObserver==null){
-            allCollectRadioObserver= Observer {
+
+       var allCollectRadioObserver: Observer<List<CollectRadioBean>> = Observer {
                 collectRadioBeans = it as MutableList<CollectRadioBean>?
                 var sbRadioIds = StringBuffer()
                 for (i in it.indices) {
@@ -87,15 +86,27 @@ class CollectingFragment : BaseFragment() {
 
             }
 
-        }
 
-        if(radioListByIdsObserver==null){
-            radioListByIdsObserver =   object : Observer<List<Radio>> {
+
+        var radioListByIdsObserver :Observer<List<Radio>> =   object : Observer<List<Radio>> {
                 override fun onChanged(radioList: List<Radio>) {
-                    collectRadios=radioList as MutableList<Radio>
 
-                    rvCollectAdapter = RvCollectAdapter(collectRadios as MutableList<Radio>)
-                    contentView.rvCollection.adapter = rvCollectAdapter
+
+                    if(rvCollectAdapter==null){
+                        collectRadios=radioList as MutableList<Radio>
+                        rvCollectAdapter = RvCollectAdapter(collectRadios as MutableList<Radio>)
+                        contentView.rvCollection.adapter = rvCollectAdapter
+
+                    }else{
+                        collectRadios?.clear()
+                        collectRadios?.addAll(radioList as MutableList<Radio>)
+                        rvCollectAdapter?.notifyDataSetChanged()
+
+                    }
+
+
+
+
                     rvCollectAdapter?.mItemClickListener = object:RvItemClickListener{
                         override fun onItemClick(view: View, position: Int) {
 
@@ -130,10 +141,10 @@ class CollectingFragment : BaseFragment() {
         }
 
 
-        }
 
-        if(queryStatusChildObserver==null){
-            queryStatusChildObserver= Observer { status ->
+
+
+        var queryStatusChildObserver: Observer<String> = Observer { status ->
                 when (status) {
                     Constants.QUERYSTATUSLOADING -> showProgress(activity)
 
@@ -155,7 +166,7 @@ class CollectingFragment : BaseFragment() {
                 }
             }
 
-        }
+
 
 
 
@@ -180,7 +191,12 @@ class CollectingFragment : BaseFragment() {
     }
 
 
-
+    override fun onFragmentVisible() {
+        super.onFragmentVisible()
+        if(collectRadioViewModel!=null){
+            collectRadioViewModel.queryAllCollectRadio()
+        }
+    }
     override fun onLoadRetry() {
        if(collectRadioViewModel!=null){
            collectRadioViewModel.queryAllCollectRadio()

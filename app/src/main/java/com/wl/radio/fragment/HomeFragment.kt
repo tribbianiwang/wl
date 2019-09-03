@@ -57,7 +57,7 @@ class HomeFragment : BaseFragment() {
     val TAG = HomeFragment::class.java.simpleName
     var radioPullRefreshViewModel: RadioPullRefreshViewModel? = null
 
-    var contentView: View? = null
+
 
     var rvHistoryAdapter: RvHomeAdapter? = null
     var rvCityAdapter: RvHomeAdapter? = null
@@ -67,26 +67,12 @@ class HomeFragment : BaseFragment() {
     var playRadioList: ArrayList<Radio> = ArrayList<Radio>()
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        if (contentView == null) {
-            contentView = View.inflate(context, R.layout.layout_fragment_home, null);
-        }
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         var intentFilter = IntentFilter()
         intentFilter.addAction(BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
         context?.registerReceiver(innerBroadcastReceiver, intentFilter)
 
-
-
-        return contentView
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         rvPlayHistory.layoutManager = LinearLayoutManager(context);
         rvCity.layoutManager = LinearLayoutManager(context);
         rvRank.layoutManager = LinearLayoutManager(context);
@@ -225,7 +211,23 @@ class HomeFragment : BaseFragment() {
         )
         radioPullRefreshViewModel?.getRankRadioList()
 
+
     }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+          var  contentView = View.inflate(context, R.layout.layout_fragment_home, null);
+
+
+
+
+
+        return contentView
+    }
+
 
     private fun setRvHistoryAdapter() {
         Log.d("HomeFragment:", "setRvHistoryAdapter-size:" + MyApplication.historyRadioList.size)
@@ -243,14 +245,14 @@ class HomeFragment : BaseFragment() {
                 playRadioList.addAll(MyApplication.getHistoryRadios())
                 rvHistoryAdapter = RvHomeAdapter(context, playRadioList)
                 rvPlayHistory.adapter = rvHistoryAdapter
-                LogUtils.d(TAG, "playradiolist:" + rvPlayHistory.hashCode().toString())
+
 
 
             } else {
                 playRadioList.clear()
                 playRadioList.addAll(MyApplication.getHistoryRadios())
                 rvHistoryAdapter?.notifyDataSetChanged()
-                LogUtils.d(TAG, "playradiolist:notify" + rvPlayHistory.hashCode().toString())
+
 
             }
 
