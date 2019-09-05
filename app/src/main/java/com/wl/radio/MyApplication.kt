@@ -29,6 +29,7 @@ import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.LogUtils
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayerConfig
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
 
@@ -64,7 +65,6 @@ class MyApplication : MultiDexApplication() {
         intentFilter.addAction(APPLICATION_NEXT_SHOW_ACTION)
         intentFilter.addAction(APPLICATION_PRE_SHOW_ACTION)
         registerReceiver(broadcastReceiver,intentFilter)
-
 
 
 
@@ -109,26 +109,28 @@ class MyApplication : MultiDexApplication() {
             return context!!
         }
         fun playNextRadio(): Radio? {
-            Log.d(TAG,"playNextRadio"+getPlayingRadioIndex()+"radiolistsize--"+ playingRadioList.size)
-            if (playingRadioList.size > 0 && getPlayingRadioIndex() < (playingRadioList.size - 1)) {
-                XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[getPlayingRadioIndex() + 1])
-                sendUpdateImageAndTitleBroadcast(playingRadioList[getPlayingRadioIndex() + 1])
-
-
-                return playingRadioList[getPlayingRadioIndex() + 1]
+            if (playingRadioList.size > 0 &&getPlayingRadioIndex() < (playingRadioList.size - 1)) {
+               return playPositionRadio(getPlayingRadioIndex() + 1);
+            }else if(getPlayingRadioIndex()== (playingRadioList.size-1)&&playingRadioList.size!=0){
+              return  playPositionRadio(0);
             }else{
                 return null
             }
+        }
 
+        fun playPositionRadio(position:Int):Radio{
+            XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[position])
+            sendUpdateImageAndTitleBroadcast(playingRadioList[position])
+            return playingRadioList[position]
         }
 
 
         fun playPreRadio():Radio?{
-            Log.d(TAG,"playPreRadio"+getPlayingRadioIndex())
             if (playingRadioList.size > 0 && getPlayingRadioIndex() != 0) {
-                XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[getPlayingRadioIndex() - 1])
-                sendUpdateImageAndTitleBroadcast(playingRadioList[getPlayingRadioIndex()-1])
-                return playingRadioList[getPlayingRadioIndex()-1]
+                return playPositionRadio(getPlayingRadioIndex()-1)
+            }else if(getPlayingRadioIndex()==0&&playingRadioList.size!=0){
+                return playPositionRadio(playingRadioList.size-1)
+
             }else{
                 return null
             }

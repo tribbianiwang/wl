@@ -252,7 +252,7 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
                     return true
                 } else { //两次按下的时间差小于两秒时
                     //退出app
-                   ActivityUtil.exitActivity()
+                   ActivityUtil.exitActivity(this@MainActivity)
                 }
             }
         }

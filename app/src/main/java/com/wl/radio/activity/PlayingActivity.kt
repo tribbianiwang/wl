@@ -11,8 +11,11 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -50,12 +53,14 @@ import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 import kotlinx.android.synthetic.main.activity_playing.*
 
 
-class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
+class PlayingActivity : BaseActivity(), IXmPlayerStatusListener ,
+android.view.GestureDetector.OnGestureListener {
 
 
     val TAG: String = "PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
-
+	// 定义手势检测器实例
+    lateinit var detector: GestureDetector
     var animator: ObjectAnimator? = null
 
      var playingRadio:Radio?=null
@@ -81,7 +86,8 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
         setContentView(R.layout.activity_playing)
         initToolbar()
 
-
+		// 创建手势检测器
+		detector =  GestureDetector(this ,this);
 
         mPlayerManager = XmPlayerManager.getInstance(this)
         val mNotification = XmNotificationCreater.getInstanse(this)
@@ -358,5 +364,61 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener {
         animator?.pause();
     }
 
+
+
+    override fun onShowPress(e: MotionEvent?) {
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        return false
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return false
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return detector.onTouchEvent(event)
+    }
+
+    override fun onFling(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean {
+
+
+        val minMove = 120f // 最小滑动距离
+        val minVelocity = 0f // 最小滑动速度
+        val beginX = e1?.x?:0f
+        val endX = e2?.x?:0f
+        val beginY = e1?.y?:0f
+        val endY = e2?.y?:0f
+
+        if (beginX - endX > minMove && Math.abs(velocityX) > minVelocity) { // 左滑
+            MyApplication.playNextRadio()
+        } else if (endX - beginX > minMove && Math.abs(velocityX) > minVelocity) { // 右滑
+            MyApplication.playPreRadio()
+        } else if (beginY - endY > minMove && Math.abs(velocityY) > minVelocity) { // 上滑
+        } else if (endY - beginY > minMove && Math.abs(velocityY) > minVelocity) { // 下滑
+        }
+
+        return false
+
+    }
+
+    override fun onScroll(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        distanceX: Float,
+        distanceY: Float
+    ): Boolean {
+        return false
+    }
+
+    override fun onLongPress(e: MotionEvent?) {
+
+    }
 
 }

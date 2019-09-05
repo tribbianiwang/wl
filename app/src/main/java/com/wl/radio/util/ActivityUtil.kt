@@ -1,6 +1,8 @@
 package com.wl.radio.util
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
 import android.util.Log
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 
@@ -22,7 +24,7 @@ object ActivityUtil {
             activityList?.remove(activity)
         }
 
-        fun exitActivity(){
+        fun exitActivity(context:Context){
 
 
             Log.d(TAG,"activityListSize"+ activityList?.size)
@@ -34,6 +36,15 @@ object ActivityUtil {
             }
             activityList?.clear()
             XmPlayerManager.release()
+
+            val mActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val mList = mActivityManager.runningAppProcesses
+            for (runningAppProcessInfo in mList) {
+                if (runningAppProcessInfo.pid != android.os.Process.myPid()) {
+                    android.os.Process.killProcess(runningAppProcessInfo.pid)
+                }
+            }
+            android.os.Process.killProcess(android.os.Process.myPid())
             System.exit(0)
 
         }

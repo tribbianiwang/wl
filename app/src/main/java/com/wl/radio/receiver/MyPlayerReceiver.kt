@@ -21,14 +21,8 @@ class MyPlayerReceiver :BroadcastReceiver(){
         Log.d(TAG,"action:"+intent?.action+"listsize:"+XmPlayerManager.getInstance(context).playList.size)
         if (intent?.getAction() ==CLOSE_APP_ACTION) {
 
-            val mActivityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val mList = mActivityManager.runningAppProcesses
-            for (runningAppProcessInfo in mList) {
-                if (runningAppProcessInfo.pid != android.os.Process.myPid()) {
-                    android.os.Process.killProcess(runningAppProcessInfo.pid)
-                }
-            }
-            android.os.Process.killProcess(android.os.Process.myPid())
+
+            context?.let { ActivityUtil.exitActivity(it) }
 
 
         } else if (intent?.getAction() == START_OR_PAUSE_ACTION) {
