@@ -32,8 +32,13 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
         dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
         Observable.create<String> {
             if (MyApplication.collectRadioDao.queryCollectRadioById(radioId) == null) {
-                MyApplication.collectRadioDao.insertCollectRadio(CollectRadioBean(radioId))
-                it.onNext(Constants.QUERYSTATUSSUCCESS)
+                if(radioId=="0"){
+                   it.onError(Throwable(StringUtils.getString(R.string.string_collect_error)))
+                }else{
+
+                    MyApplication.collectRadioDao.insertCollectRadio(CollectRadioBean(radioId))
+                    it.onNext(Constants.QUERYSTATUSSUCCESS)
+                }
             } else {
                 it.onError(Throwable(StringUtils.getString(R.string.string_already_collect)))
             }

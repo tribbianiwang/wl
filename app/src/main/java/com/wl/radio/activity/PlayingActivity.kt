@@ -8,22 +8,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.wl.radio.MyApplication
 import com.wl.radio.R
-import com.wl.radio.bean.CollectRadioBean
-import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
@@ -34,12 +28,9 @@ import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.StringUtils
+import com.wl.radio.util.testJava
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest.getRadios
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack
 import com.ximalaya.ting.android.opensdk.model.PlayableModel
 import com.ximalaya.ting.android.opensdk.model.live.program.ProgramList
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
@@ -48,6 +39,7 @@ import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayerConfig
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 
 import kotlinx.android.synthetic.main.activity_playing.*
@@ -85,6 +77,7 @@ android.view.GestureDetector.OnGestureListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playing)
         initToolbar()
+
 
 		// 创建手势检测器
 		detector =  GestureDetector(this ,this);
@@ -184,7 +177,7 @@ android.view.GestureDetector.OnGestureListener {
         registerReceiver(broadcastReceiver, intentFilter)
 
         initAnim()
-
+//        testJava.testReceiver(this);
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
@@ -249,7 +242,7 @@ android.view.GestureDetector.OnGestureListener {
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
                 iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
                 //收藏电台id
-                LogUtils.d(TAG,"radioName:"+playingRadio?.radioName+playingRadio?.dataId)
+
                 collectRadioViewModel.addCollectRadio(playingRadio?.dataId.toString())
 
             }else{

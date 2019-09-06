@@ -11,7 +11,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.util.Log
 import androidx.multidex.MultiDexApplication
 import com.wl.radio.dao.CollectRadioDao
 import com.wl.radio.dao.UserDao
@@ -27,9 +26,9 @@ import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.LogUtils
+import com.wl.radio.util.testJava.testReceiver
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
-import com.ximalaya.ting.android.opensdk.player.service.XmPlayerConfig
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
 
@@ -52,6 +51,7 @@ class MyApplication : MultiDexApplication() {
 
 
 
+
     override fun onCreate() {
         super.onCreate()
         Gloading.debug(BuildConfig.DEBUG)
@@ -65,6 +65,7 @@ class MyApplication : MultiDexApplication() {
         intentFilter.addAction(APPLICATION_NEXT_SHOW_ACTION)
         intentFilter.addAction(APPLICATION_PRE_SHOW_ACTION)
         registerReceiver(broadcastReceiver,intentFilter)
+
 
 
 
@@ -96,6 +97,8 @@ class MyApplication : MultiDexApplication() {
             val preShowBroadcast = PendingIntent.getBroadcast(this, 0, preShowIntent, 0)
             instanse.setPrePendingIntent(preShowBroadcast)
         }
+
+
     }
 
     companion object {
@@ -204,6 +207,10 @@ class MyApplication : MultiDexApplication() {
 
 
     }
+
+
+
+
 
 
 

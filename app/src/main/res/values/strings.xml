@@ -31,4 +31,5 @@
     <string name="string_delete">删除</string>
     <string name="unselected">unselected</string>
     <string name="selected">selected</string>
+    <string name="string_collect_error">收藏失败，请重试</string>
 </resources>

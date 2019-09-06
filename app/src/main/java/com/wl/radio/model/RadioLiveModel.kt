@@ -1,5 +1,6 @@
 package com.wl.radio.model
 
+import android.util.Log
 import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
@@ -84,7 +85,9 @@ class RadioLiveModel(radioLiveViewModel: DataResultListener<RadioList>) {
     fun getRadioInfos(radioDataIds:String){
         val map = HashMap<String, String>()
 
-        map[DTransferConstants.RADIO_IDS] = radioDataIds.toString()
+        Log.d("getraiods",radioDataIds)
+        map[DTransferConstants.RADIO_IDS] = radioDataIds
+
 
         CommonRequest.getRadiosByIds(map, object :IDataCallBack<RadioListById>{
             override fun onSuccess(radioLists: RadioListById?) {
@@ -100,6 +103,7 @@ class RadioLiveModel(radioLiveViewModel: DataResultListener<RadioList>) {
             }
 
             override fun onError(errorType: Int, errorMsg: String?) {
+                Log.d("radiolivemodel","errormsg:"+errorMsg)
                 dataResultListener?.setQueryStatus(Constants.QUERYSTATUSFAILED)
                 errorMsg?.let { dataResultListener?.setErrorMsg(it) }
 
