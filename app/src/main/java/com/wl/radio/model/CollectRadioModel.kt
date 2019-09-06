@@ -25,6 +25,7 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
         fun setQueryStatus(status: String)
         fun setErrorMsg(msg: String)
         fun setAllCollectRadio(collectRadios: List<CollectRadioBean>)
+        fun getIsRadioCollected(isCollect:Boolean)
     }
 
 
@@ -64,6 +65,38 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
 
     }
 
+    fun queryCollectRadioById(radioId: String){
+        dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
+        Observable.create<Boolean> {
+            if (MyApplication.collectRadioDao.queryCollectRadioById(radioId) == null) {
+                    it.onNext(false)
+            } else {
+                    it.onNext(true)
+            }
+
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Subscriber<Boolean>() {
+                override fun onNext(isCollect: Boolean) {
+
+                        dataResultListener.getIsRadioCollected(isCollect)
+
+
+
+                }
+
+                override fun onCompleted() {
+                }
+
+                override fun onError(e: Throwable) {
+                    dataResultListener.setQueryStatus(Constants.QUERYSTATUSFAILED)
+                    dataResultListener.setErrorMsg(e.message.toString())
+                }
+
+            })
+    }
+
+
 
     fun deleteCollectRadio(collectRadioBean: CollectRadioBean) {
 
@@ -93,6 +126,34 @@ class CollectRadioModel(dataResultListener: DataResultListener) {
             })
 
     }
+
+    fun deleteCollectBeanById(radioId: String){
+        dataResultListener.setQueryStatus(Constants.QUERYSTATUSLOADING)
+        Observable.create<String> {
+            MyApplication.collectRadioDao.deleteCollectRadioById(radioId)
+            it.onNext(Constants.QUERYDELETESUCCESS)
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Subscriber<String>() {
+                override fun onNext(t: String) {
+                    dataResultListener.setQueryStatus(t)
+                    Log.d("collectRadioModel","success:")
+                }
+
+                override fun onCompleted() {
+
+
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.e("collectRadioModel","error:"+e.message.toString())
+                    dataResultListener.setQueryStatus(Constants.QUERYSTATUSFAILED)
+                    dataResultListener.setErrorMsg(e.message.toString())
+
+                }
+
+            })
+    }
+
 
 
     fun queryAllCollectRadio() {

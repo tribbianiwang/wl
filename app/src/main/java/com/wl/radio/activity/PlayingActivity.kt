@@ -126,6 +126,16 @@ android.view.GestureDetector.OnGestureListener {
 
         }
 
+        val radioIsCollectedObserver:Observer<Boolean> = Observer {
+            if(it){
+                iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
+            }else{
+                iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
+            }
+        }
+
+
+
 
         val radioInfoObserver: Observer<ProgramList> = Observer {
             val getmProgramList = it?.getmProgramList();
@@ -152,6 +162,7 @@ android.view.GestureDetector.OnGestureListener {
         radioLiveViewModel.queryStatusLiveData?.observe(this, queryStatusObserver)
         radioLiveViewModel.radioListLiveData?.observe(this, radioListResultObserver)
         radioLiveViewModel.radioInfoLiveData?.observe(this, radioInfoObserver)
+        collectRadioViewModel.isRadioCollectedLiveDate.observe(this,radioIsCollectedObserver)
 
 
 
@@ -193,6 +204,10 @@ android.view.GestureDetector.OnGestureListener {
         selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
         tvRadioName.text = selectRadio?.programName
         tvTitle.text = selectRadio?.radioName
+
+        if (selectRadio != null) {
+            collectRadioViewModel.queryCollectRadioById(selectRadio.dataId.toString())
+        }
     }
 
     override fun onDestroy() {
@@ -243,10 +258,17 @@ android.view.GestureDetector.OnGestureListener {
                 iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
                 //收藏电台id
 
-                collectRadioViewModel.addCollectRadio(playingRadio?.dataId.toString())
+                if(playingRadio!=null){
+                    collectRadioViewModel.addCollectRadio(playingRadio!!.dataId.toString())
+                }
+
 
             }else{
                 //开始执行取消收藏
+                if(playingRadio!=null){
+                    collectRadioViewModel.deleteCollectRadioById(playingRadio!!.dataId.toString())
+                }
+
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
                 iv_collect_radio.setTag(StringUtils.getString(R.string.unselected))
 

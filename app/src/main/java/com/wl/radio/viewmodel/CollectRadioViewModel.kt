@@ -6,10 +6,15 @@ import com.wl.radio.bean.CollectRadioBean
 import com.wl.radio.model.CollectRadioModel
 
 class CollectRadioViewModel :ViewModel(),LifecycleObserver,CollectRadioModel.DataResultListener{
+
+
     var queryStatusLiveData: MutableLiveData<String>?= MutableLiveData()
     var errorMsgLiveData: MutableLiveData<String>?= MutableLiveData()
     var allCollectRadioLiveData:MutableLiveData<List<CollectRadioBean>> = MutableLiveData()
+    var isRadioCollectedLiveDate:MutableLiveData<Boolean> = MutableLiveData()
+
     var collectRadioModel = CollectRadioModel(this)
+
 
     override fun setQueryStatus(status: String) {
         queryStatusLiveData?.value = status
@@ -39,8 +44,21 @@ class CollectRadioViewModel :ViewModel(),LifecycleObserver,CollectRadioModel.Dat
 
     }
 
+    fun deleteCollectRadioById(radioId: String){
+        collectRadioModel.deleteCollectBeanById(radioId)
+    }
+
     fun queryAllCollectRadio(){
         collectRadioModel.queryAllCollectRadio()
+    }
+
+    fun queryCollectRadioById(radioId: String){
+        collectRadioModel.queryCollectRadioById(radioId)
+
+    }
+
+    override fun getIsRadioCollected(isCollect: Boolean) {
+        isRadioCollectedLiveDate.value = isCollect
     }
 
 }

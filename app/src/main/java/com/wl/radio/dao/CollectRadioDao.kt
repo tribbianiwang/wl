@@ -15,8 +15,11 @@ interface CollectRadioDao {
     fun insertCollectRadios(collectRadios:List<CollectRadioBean>)
 
 
+    @Query("DELETE  FROM collectRadio WHERE radioId =:radioId")
+    fun deleteCollectRadioById(radioId: String)
+
     //删除一个电台
-    @Delete()
+    @Delete( )
     fun deleteCollectRadio(collectRadio:CollectRadioBean)
 
     //删除多个电台
