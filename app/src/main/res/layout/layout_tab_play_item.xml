@@ -7,7 +7,7 @@
     <com.makeramen.roundedimageview.RoundedImageView
             android:layout_gravity="center"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/iv_round_view"
+            android:id="@+id/riv_playing_radio"
             android:src="@drawable/icon_radio_test"
             android:scaleType="fitXY"
             app:riv_corner_radius="1dp"

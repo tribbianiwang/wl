@@ -11,6 +11,8 @@ import com.wl.radio.util.Constants
 import com.wl.radio.util.Constants.CLOSE_APP_ACTION
 import com.wl.radio.util.Constants.NEXT_SHOW_ACTION
 import com.wl.radio.util.Constants.PRE_SHOW_ACTION
+import com.wl.radio.util.Constants.RADIO_IS_PLAYING_DATA
+import com.wl.radio.util.Constants.RADIO_PLAYING_PAUSE_ACTION
 import com.wl.radio.util.Constants.START_OR_PAUSE_ACTION
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 
@@ -26,11 +28,16 @@ class MyPlayerReceiver :BroadcastReceiver(){
 
 
         } else if (intent?.getAction() == START_OR_PAUSE_ACTION) {
+
+
             if (XmPlayerManager.getInstance(context).isPlaying) {
                 XmPlayerManager.getInstance(context).pause()
+
             } else {
                 XmPlayerManager.getInstance(context).play()
+
             }
+
         }else if(intent?.action== PRE_SHOW_ACTION){
 
             context?.sendBroadcast(Intent(Constants.APPLICATION_PRE_SHOW_ACTION))

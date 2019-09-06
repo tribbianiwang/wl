@@ -16,31 +16,66 @@ import com.wl.radio.util.LogUtils
 import kotlinx.android.synthetic.main.layout_tab_item.view.*
 import com.yanzhenjie.permission.AndPermission
 import android.Manifest.permission
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.content.*
 
 import com.yanzhenjie.permission.Permission
 
 import com.yanzhenjie.permission.PermissionListener
 
-import android.content.DialogInterface
-
 import androidx.appcompat.app.AlertDialog
-import android.content.Intent
 import android.os.Build
 
 
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 
 import android.widget.Toast
 
 
 import android.view.KeyEvent
+import android.view.animation.LinearInterpolator
+import androidx.annotation.MainThread
+import androidx.annotation.RequiresApi
+import com.makeramen.roundedimageview.RoundedImageView
 import com.wl.radio.util.ActivityUtil
+import com.wl.radio.util.Constants
+import com.wl.radio.util.Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY
+import com.wl.radio.util.ImgUtils
+import com.ximalaya.ting.android.opensdk.model.PlayableModel
+import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
+import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
+import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
+import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
+import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
+import kotlinx.android.synthetic.main.activity_playing.*
+import kotlinx.android.synthetic.main.layout_tab_play_item.*
+import kotlinx.android.synthetic.main.layout_tab_play_item.view.*
+import kotlinx.android.synthetic.main.layout_tab_play_item.view.riv_playing_radio
 
 
-class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
+class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener, IXmPlayerStatusListener {
 
+   lateinit var mPlayerManager: XmPlayerManager
     var unSelectedTabPosition:Int=0
+    lateinit var ivPlayingBottom: RoundedImageView
+    var playingRadio:Radio?=null
+   lateinit var animator: ObjectAnimator
+    var broadcastReceiver:BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when(intent?.action){
+                Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY->{
+                    playingRadio=  intent.getParcelableExtra<Radio>(Constants.TRANS_PLAYING_RADIO)
+                    playingRadio?.coverUrlLarge?.let { ImgUtils.showImage(this@MainActivity, it, ivPlayingBottom) }
+                }
+            }
+
+        }
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +86,18 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
 
         requestPermission()
 
+        var intentFilter = IntentFilter()
+        intentFilter.addAction(BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
+        registerReceiver(broadcastReceiver,intentFilter)
+
+        mPlayerManager = XmPlayerManager.getInstance(this)
+        val mNotification = XmNotificationCreater.getInstanse(this)
+            .initNotification(this.applicationContext, PlayingActivity::class.java)
+        NotificationColorUtils.isTargerSDKVersion24More = true;
+        mPlayerManager?.init(System.currentTimeMillis().toInt(), mNotification)
+        mPlayerManager?.addPlayerStatusListener(this)
+
+        initAnim()
     }
 
 
@@ -154,6 +201,9 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
 
     private fun playingTabIcon():View{
         val playTabIcon = LayoutInflater.from(this).inflate(R.layout.layout_tab_play_item,null);
+        ivPlayingBottom = playTabIcon.riv_playing_radio
+
+
         return playTabIcon
     }
 
@@ -258,4 +308,92 @@ class MainActivity : BaseActivity() ,TabLayout.OnTabSelectedListener{
         }
         return super.onKeyUp(keyCode, event)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onPlayStart() {
+        startRotateAnim()
+        Log.d("MainActivity","onPlayStart")
+    }
+
+    override fun onSoundSwitch(p0: PlayableModel?, p1: PlayableModel?) {
+        
+    }
+
+    override fun onPlayProgress(p0: Int, p1: Int) {
+        
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onPlayPause() {
+        stopRotateAnim()
+        Log.d("MainActivity","onPlayPause")
+    }
+
+    override fun onBufferProgress(p0: Int) {
+        
+    }
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onPlayStop() {
+        stopRotateAnim()
+        Log.d("MainActivity","onPlayStop")
+    }
+
+    override fun onBufferingStart() {
+        
+    }
+
+    override fun onSoundPlayComplete() {
+        
+    }
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onError(p0: XmPlayerException?): Boolean {
+        stopRotateAnim()
+        Log.d("MainActivity","onError")
+        return false
+    }
+
+    override fun onSoundPrepared() {
+        
+    }
+
+    override fun onBufferingStop() {
+        
+    }
+
+
+
+    var isAnimRunning: Boolean = false
+    fun initAnim() {
+        animator = ObjectAnimator.ofFloat(ivPlayingBottom, "rotation", 0f, 360.0f);
+        animator?.setDuration(20000);
+        animator?.setInterpolator(LinearInterpolator());//不停顿
+        animator?.setRepeatCount(-1);//设置动画重复次数
+        animator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun startRotateAnim() {
+
+        if (isAnimRunning) {
+            animator?.resume();
+        } else {
+            animator?.start();//开始动画
+            isAnimRunning = true;
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun stopRotateAnim() {
+
+        animator?.pause();
+    }
+    
 }

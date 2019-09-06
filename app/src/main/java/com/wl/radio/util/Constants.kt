@@ -76,6 +76,9 @@ object Constants {
     val APPLICATION_NEXT_SHOW_ACTION = "com.wl.radio.action.next_show_application"
     val APPLICATION_PRE_SHOW_ACTION = "com.wl.radio.action_pre_show_application"
 
+    val RADIO_PLAYING_PAUSE_ACTION = "RADIO_PLAYING_PAUSE_ACTION"
+    val RADIO_IS_PLAYING_DATA="RADIO_PLAYING_PAUSE_DATA"
+
     val RESET_RADIO_IMG_AND_TITLE_ACTION = "RESET_RADIO_IMG_AND_TITLE_ACTION"
 
 
