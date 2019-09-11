@@ -200,7 +200,10 @@ android.view.GestureDetector.OnGestureListener {
             this@PlayingActivity.sendBroadcast(intent)
 
         }
-        selectRadio?.coverUrlLarge?.let { ImgUtils.showImage(this, it, ivCover) }
+
+        selectRadio?.coverUrlLarge?.let {
+//            givCover.setPictureBitmMap(ImgUtils.getImgeUrlBitmap(this,it))
+            ImgUtils.showImage(this, it, ivCover) }
         tvRadioName.text = selectRadio?.programName
         tvTitle.text = selectRadio?.radioName
 
@@ -231,6 +234,8 @@ android.view.GestureDetector.OnGestureListener {
             } else {
                 mPlayerManager?.play()
             }
+
+
 
         }
         ivPlayNext.setOnClickListener {
@@ -307,6 +312,7 @@ android.view.GestureDetector.OnGestureListener {
             stopRotateAnim()
         }
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
+
     }
 
     override fun onBufferProgress(p0: Int) {
@@ -316,6 +322,7 @@ android.view.GestureDetector.OnGestureListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             stopRotateAnim()
         }
+
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
 
     }
@@ -365,7 +372,7 @@ android.view.GestureDetector.OnGestureListener {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startRotateAnim() {
-
+        givCover.setPlaying(true)
         if (isAnimRunning) {
             rotateAnimator?.resume();
         } else {
@@ -376,7 +383,7 @@ android.view.GestureDetector.OnGestureListener {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun stopRotateAnim() {
-
+        givCover.setPlaying(false)
         rotateAnimator?.pause();
     }
 
