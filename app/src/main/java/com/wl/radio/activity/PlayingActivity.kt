@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
@@ -28,7 +29,6 @@ import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.StringUtils
-import com.wl.radio.util.testJava
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
 import com.ximalaya.ting.android.opensdk.model.PlayableModel
@@ -39,7 +39,6 @@ import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
-import com.ximalaya.ting.android.opensdk.player.service.XmPlayerConfig
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 
 import kotlinx.android.synthetic.main.activity_playing.*
@@ -53,7 +52,7 @@ android.view.GestureDetector.OnGestureListener {
     var mPlayerManager: XmPlayerManager? = null
 	// 定义手势检测器实例
     lateinit var detector: GestureDetector
-    var animator: ObjectAnimator? = null
+    var rotateAnimator: ObjectAnimator? = null
 
      var playingRadio:Radio?=null
     lateinit var  collectRadioViewModel:CollectRadioViewModel
@@ -256,6 +255,8 @@ android.view.GestureDetector.OnGestureListener {
                 //开始执行收藏
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
                 iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
+
+                iv_collect_radio.startAnimation(AnimationUtils.loadAnimation(this@PlayingActivity, R.anim.add_collect_anim));
                 //收藏电台id
 
                 if(playingRadio!=null){
@@ -355,20 +356,20 @@ android.view.GestureDetector.OnGestureListener {
 
     var isAnimRunning: Boolean = false
     fun initAnim() {
-        animator = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360.0f);
-        animator?.setDuration(20000);
-        animator?.setInterpolator(LinearInterpolator());//不停顿
-        animator?.setRepeatCount(-1);//设置动画重复次数
-        animator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
+        rotateAnimator = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360.0f);
+        rotateAnimator?.setDuration(20000);
+        rotateAnimator?.setInterpolator(LinearInterpolator());//不停顿
+        rotateAnimator?.setRepeatCount(-1);//设置动画重复次数
+        rotateAnimator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startRotateAnim() {
 
         if (isAnimRunning) {
-            animator?.resume();
+            rotateAnimator?.resume();
         } else {
-            animator?.start();//开始动画
+            rotateAnimator?.start();//开始动画
             isAnimRunning = true;
         }
     }
@@ -376,7 +377,7 @@ android.view.GestureDetector.OnGestureListener {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun stopRotateAnim() {
 
-        animator?.pause();
+        rotateAnimator?.pause();
     }
 
 
