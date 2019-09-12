@@ -28,6 +28,7 @@ import com.wl.radio.util.Constants.RADIOTYPECOUNTRY
 import com.wl.radio.util.Constants.RADIOTYPEINTERNET
 import com.wl.radio.util.Constants.RADIOTYPEPROVINCE
 import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
+import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.RvItemClickListener
 import com.wl.radio.viewmodel.RadioPullRefreshViewModel
@@ -79,6 +80,7 @@ class HomeFragment : BaseFragment() {
         rvPlayHistory.layoutManager = LinearLayoutManager(context);
         rvCity.layoutManager = LinearLayoutManager(context);
         rvRank.layoutManager = LinearLayoutManager(context);
+
 
 
         setRvHistoryAdapter()

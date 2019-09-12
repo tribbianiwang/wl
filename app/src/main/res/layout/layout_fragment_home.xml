@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
                     android:layout_marginLeft="@dimen/app_margin_left"
                     android:id="@+id/iv_history_left"
                     android:layout_alignParentLeft="true"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_white_gray"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
                     android:layout_marginLeft="@dimen/app_margin_left"
                     android:id="@+id/iv_city_left"
                     android:layout_alignParentLeft="true"
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
                     android:layout_marginLeft="@dimen/app_margin_left"
                     android:id="@+id/iv_rank_left"
                     android:layout_alignParentLeft="true"

@@ -21,7 +21,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
+                    android:id="@+id/iv_local"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:src="@drawable/icon_radio_local"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
+                    android:id="@+id/iv_country"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:src="@drawable/icon_radio_country"
@@ -69,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
+                    android:id="@+id/iv_province"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:src="@drawable/icon_radio_province"
@@ -93,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
         >
-            <ImageView
+            <com.wl.radio.view.ThemeImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:src="@drawable/icon_radio_internet"

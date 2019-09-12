@@ -6,12 +6,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresApi
@@ -26,6 +29,7 @@ import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
 import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
+import com.wl.radio.util.FastBlur
 import com.wl.radio.util.ImgUtils
 import com.wl.radio.util.LogUtils
 import com.wl.radio.util.StringUtils
@@ -183,7 +187,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
         registerReceiver(broadcastReceiver, intentFilter)
 
-
+//        applyBlur();
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
@@ -210,6 +214,8 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         if (selectRadio != null) {
             collectRadioViewModel.queryCollectRadioById(selectRadio.dataId.toString())
         }
+
+//        applyBlur();
     }
 
     override fun onDestroy() {
@@ -425,5 +431,13 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     override fun onLongPress(e: MotionEvent?) {
 
     }
+
+
+
+
+
+
+
+
 
 }

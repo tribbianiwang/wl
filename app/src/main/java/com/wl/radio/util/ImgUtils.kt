@@ -7,6 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.wl.radio.R
 import android.graphics.Bitmap
+import androidx.core.graphics.drawable.DrawableCompat
 import com.wl.radio.view.GramophoneView
 import rx.Observable
 import rx.Subscriber
@@ -25,6 +26,12 @@ object ImgUtils {
             .apply(options)
             .into(imageView)
     }
+
+    fun showColorIcon(imageView:ImageView){
+        imageView.setColorFilter(StringUtils.getColor(R.color.colorPrimary));
+
+    }
+
 
     //    fun getImgeUrlBitmap(context: Context, imageUrl: String):Bitmap{
     fun showImgeUrlBitmap(
