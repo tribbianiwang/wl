@@ -90,6 +90,7 @@ public class GramophoneView extends View {
         discPaint.setColor(Color.BLACK);
         discPaint.setStyle(Paint.Style.STROKE);
         discPaint.setStrokeWidth(ringWidth);
+        discPaint.setAntiAlias(true);
         srcRect = new Rect();
         dstRect = new Rect();
         setBitmapRect(srcRect, dstRect);

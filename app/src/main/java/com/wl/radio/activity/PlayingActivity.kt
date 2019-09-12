@@ -44,18 +44,18 @@ import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 import kotlinx.android.synthetic.main.activity_playing.*
 
 
-class PlayingActivity : BaseActivity(), IXmPlayerStatusListener ,
-android.view.GestureDetector.OnGestureListener {
+class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
+    android.view.GestureDetector.OnGestureListener {
 
 
     val TAG: String = "PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
-	// 定义手势检测器实例
+    // 定义手势检测器实例
     lateinit var detector: GestureDetector
     var rotateAnimator: ObjectAnimator? = null
 
-     var playingRadio:Radio?=null
-    lateinit var  collectRadioViewModel:CollectRadioViewModel
+    var playingRadio: Radio? = null
+    lateinit var collectRadioViewModel: CollectRadioViewModel
 
 
     var broadcastReceiver = object : BroadcastReceiver() {
@@ -78,8 +78,8 @@ android.view.GestureDetector.OnGestureListener {
         initToolbar()
 
 
-		// 创建手势检测器
-		detector =  GestureDetector(this ,this);
+        // 创建手势检测器
+        detector = GestureDetector(this, this);
 
         mPlayerManager = XmPlayerManager.getInstance(this)
         val mNotification = XmNotificationCreater.getInstanse(this)
@@ -93,7 +93,7 @@ android.view.GestureDetector.OnGestureListener {
 
         //1
         val radioLiveViewModel = ViewModelProviders.of(this).get(RadioLiveViewModel::class.java)
-        collectRadioViewModel=  ViewModelProviders.of(this).get(CollectRadioViewModel::class.java)
+        collectRadioViewModel = ViewModelProviders.of(this).get(CollectRadioViewModel::class.java)
 
 
         //2
@@ -125,15 +125,13 @@ android.view.GestureDetector.OnGestureListener {
 
         }
 
-        val radioIsCollectedObserver:Observer<Boolean> = Observer {
-            if(it){
+        val radioIsCollectedObserver: Observer<Boolean> = Observer {
+            if (it) {
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
-            }else{
+            } else {
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
             }
         }
-
-
 
 
         val radioInfoObserver: Observer<ProgramList> = Observer {
@@ -154,14 +152,13 @@ android.view.GestureDetector.OnGestureListener {
         }
 
 
-
         //4
 
         radioLiveViewModel.errorMsgLiveData?.observe(this, errorMsgObserver)
         radioLiveViewModel.queryStatusLiveData?.observe(this, queryStatusObserver)
         radioLiveViewModel.radioListLiveData?.observe(this, radioListResultObserver)
         radioLiveViewModel.radioInfoLiveData?.observe(this, radioInfoObserver)
-        collectRadioViewModel.isRadioCollectedLiveDate.observe(this,radioIsCollectedObserver)
+        collectRadioViewModel.isRadioCollectedLiveDate.observe(this, radioIsCollectedObserver)
 
 
 
@@ -186,24 +183,27 @@ android.view.GestureDetector.OnGestureListener {
         var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
         registerReceiver(broadcastReceiver, intentFilter)
 
-        initAnim()
-//        testJava.testReceiver(this);
+
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
         playingRadio = selectRadio
-        playingRadio?.let { MyApplication.addHistoryRadios(it)
+        playingRadio?.let {
+            MyApplication.addHistoryRadios(it)
 
-            var intent  = Intent()
+            var intent = Intent()
             intent.setAction(BROADCAST_REFRESH_PLAY_RADIO_HISTORY)
-            intent.putExtra(TRANS_PLAYING_RADIO,selectRadio)
+            intent.putExtra(TRANS_PLAYING_RADIO, selectRadio)
             this@PlayingActivity.sendBroadcast(intent)
 
         }
 
         selectRadio?.coverUrlLarge?.let {
-//            givCover.setPictureBitmMap(ImgUtils.getImgeUrlBitmap(this,it))
-            ImgUtils.showImage(this, it, ivCover) }
+
+            ImgUtils.showImgeUrlBitmap(this, it, givCover)
+
+
+        }
         tvRadioName.text = selectRadio?.programName
         tvTitle.text = selectRadio?.radioName
 
@@ -236,7 +236,6 @@ android.view.GestureDetector.OnGestureListener {
             }
 
 
-
         }
         ivPlayNext.setOnClickListener {
 
@@ -250,28 +249,29 @@ android.view.GestureDetector.OnGestureListener {
 
 
 
-        ivCover.setOnClickListener{
-            LogUtils.d(TAG,"collectRadio:queryAll")
-            collectRadioViewModel.queryAllCollectRadio()
-        }
 
-        iv_collect_radio.setOnClickListener{
-            if(iv_collect_radio.getTag().equals(StringUtils.getString(R.string.unselected))){
+        iv_collect_radio.setOnClickListener {
+            if (iv_collect_radio.getTag().equals(StringUtils.getString(R.string.unselected))) {
                 //开始执行收藏
                 iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
                 iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
 
-                iv_collect_radio.startAnimation(AnimationUtils.loadAnimation(this@PlayingActivity, R.anim.add_collect_anim));
+                iv_collect_radio.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        this@PlayingActivity,
+                        R.anim.add_collect_anim
+                    )
+                );
                 //收藏电台id
 
-                if(playingRadio!=null){
+                if (playingRadio != null) {
                     collectRadioViewModel.addCollectRadio(playingRadio!!.dataId.toString())
                 }
 
 
-            }else{
+            } else {
                 //开始执行取消收藏
-                if(playingRadio!=null){
+                if (playingRadio != null) {
                     collectRadioViewModel.deleteCollectRadioById(playingRadio!!.dataId.toString())
                 }
 
@@ -288,9 +288,9 @@ android.view.GestureDetector.OnGestureListener {
 
     override fun onPlayStart() {
         LogUtils.d(TAG, "onPlayStart")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            startRotateAnim()
-        }
+
+        startRotateAnim()
+
         ivPlayPause.setImageResource(R.drawable.selector_pause_drawable)
     }
 
@@ -308,9 +308,9 @@ android.view.GestureDetector.OnGestureListener {
     }
 
     override fun onPlayPause() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            stopRotateAnim()
-        }
+
+        stopRotateAnim()
+
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
 
     }
@@ -319,10 +319,7 @@ android.view.GestureDetector.OnGestureListener {
     }
 
     override fun onPlayStop() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            stopRotateAnim()
-        }
-
+        stopRotateAnim()
         ivPlayPause.setImageResource(R.drawable.selector_play_drawable)
 
     }
@@ -361,32 +358,17 @@ android.view.GestureDetector.OnGestureListener {
 
     }
 
-    var isAnimRunning: Boolean = false
-    fun initAnim() {
-        rotateAnimator = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360.0f);
-        rotateAnimator?.setDuration(20000);
-        rotateAnimator?.setInterpolator(LinearInterpolator());//不停顿
-        rotateAnimator?.setRepeatCount(-1);//设置动画重复次数
-        rotateAnimator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
-    }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startRotateAnim() {
         givCover.setPlaying(true)
-        if (isAnimRunning) {
-            rotateAnimator?.resume();
-        } else {
-            rotateAnimator?.start();//开始动画
-            isAnimRunning = true;
-        }
+
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
+
     fun stopRotateAnim() {
         givCover.setPlaying(false)
-        rotateAnimator?.pause();
-    }
 
+    }
 
 
     override fun onShowPress(e: MotionEvent?) {
@@ -414,10 +396,10 @@ android.view.GestureDetector.OnGestureListener {
 
         val minMove = 120f // 最小滑动距离
         val minVelocity = 0f // 最小滑动速度
-        val beginX = e1?.x?:0f
-        val endX = e2?.x?:0f
-        val beginY = e1?.y?:0f
-        val endY = e2?.y?:0f
+        val beginX = e1?.x ?: 0f
+        val endX = e2?.x ?: 0f
+        val beginY = e1?.y ?: 0f
+        val endY = e2?.y ?: 0f
 
         if (beginX - endX > minMove && Math.abs(velocityX) > minVelocity) { // 左滑
             MyApplication.playNextRadio()
