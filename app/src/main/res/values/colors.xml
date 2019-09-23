@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1156CD</color>
-    <color name="colorPrimaryDark">#1156CD</color>
-    <color name="colorAccent">#1156CD</color>
+    <color name="colorPrimary">@color/event1</color>
+    <color name="colorPrimaryDark">@color/event1</color>
+    <color name="colorAccent">@color/event1</color>
 
-    <color name="primary_blue">#1156CD</color>
-    <color name="primary">#1156CD</color>
+    <color name="primary_blue">@color/event1</color>
+    <color name="primary">@color/event1</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="alphablack">#33000000</color>
