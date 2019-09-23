@@ -1,33 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/gray_white"
+        android:orientation="vertical"
         tools:context=".activity.MainActivity">
 
 
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingTop="@dimen/app_margin_left"
+            android:paddingBottom="@dimen/app_margin_left">
+
+        <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/app_margin_left"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_logo" />
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="@dimen/app_margin_left"
+                android:layout_marginRight="@dimen/app_margin_left"
+                android:layout_toLeftOf="@id/iv_menu"
+                android:layout_toRightOf="@id/iv_logo"
+                android:background="@drawable/shape_radius_white"
+                android:orientation="horizontal">
+
+            <com.wl.radio.view.ThemeImageView
+                    android:layout_marginLeft="@dimen/app_margin_left"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icon_search" />
+
+            <EditText
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="@dimen/app_margin_left"
+                    android:background="@color/transparent"
+                    android:textColor="@color/design_text_black"
+                    android:textColorHint="@color/design_text_gray"
+                    android:hint="@string/string_search_hint"
+                    android:textSize="@dimen/small_text_size"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    />
+
+        </LinearLayout>
+
+        <ImageView
+                android:foreground="?selectableItemBackground"
+                android:id="@+id/iv_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/app_margin_left"
+                android:adjustViewBounds="true"
+                android:src="@drawable/icon_menu" />
+
+    </RelativeLayout>
 
 
     <com.wl.radio.view.NoScrollViewPager
-            android:layout_weight="1"
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     <com.google.android.material.tabs.TabLayout
 
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/tabLayout"
-            custom:tabIndicatorHeight="0dp"
-            app:tabMaxWidth="0dp"
-            app:tabGravity="fill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            custom:tabMode="fixed"/>
+            app:tabGravity="fill"
+            app:tabMaxWidth="0dp"
+            custom:tabIndicatorHeight="0dp"
+            custom:tabMode="fixed" />
 
 
 </LinearLayout>

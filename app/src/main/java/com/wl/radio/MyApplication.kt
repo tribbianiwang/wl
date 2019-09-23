@@ -34,8 +34,6 @@ import com.ximalaya.ting.android.opensdk.util.BaseUtil
 
 class MyApplication : MultiDexApplication() {
 
-
-
     var broadcastReceiver:BroadcastReceiver = object:BroadcastReceiver(){
         override fun onReceive(context: Context, intent: Intent) {
             when(intent.action){
@@ -209,7 +207,9 @@ class MyApplication : MultiDexApplication() {
     }
 
 
+    fun setColorTheme(){
 
+    }
 
 
 
