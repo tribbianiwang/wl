@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wl.radio.R
 import com.wl.radio.adapter.RvHomeAdapter.ViewHolder
-import com.wl.radio.util.ImgUtils
-import com.wl.radio.util.LogUtils
-import com.wl.radio.util.RvItemClickListener
-import com.wl.radio.util.RvItemLongClickListener
+import com.wl.radio.util.*
 import com.wl.radio.util.StringUtils.formatPlayCount
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
@@ -55,7 +52,7 @@ class RvHomeAdapter: RecyclerView.Adapter<ViewHolder>{
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.tvRadioName.text=recordList?.get(position)?.radioName
-        holder.itemView.tvShowName.text=recordList?.get(position)?.programName
+        holder.itemView.tvShowName.text=StringUtils.getString(R.string.string_live_title)+recordList?.get(position)?.programName
         holder.itemView.tvPeopleTimes.text= recordList?.get(position)?.radioPlayCount?.toLong()?.let {
             formatPlayCount(
                 it

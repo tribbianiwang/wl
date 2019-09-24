@@ -24,12 +24,12 @@ object  StringUtils{
     fun formatPlayCount(playCount: Long): String {
         var standardPlayCount = ""
         if (playCount < 0) {
-            standardPlayCount = "收听人数:0"
+            standardPlayCount = "0"
         } else if (playCount < 10000) {
-            standardPlayCount = "收听人数:"+playCount.toString()
+            standardPlayCount = playCount.toString()
         } else if (playCount < 100000000) {
             standardPlayCount =
-                String.format(Locale.getDefault(), "收听人数:%d.%02d万", playCount / 10000, playCount % 10000 / 100)
+                String.format(Locale.getDefault(), "%d.%02d万", playCount / 10000, playCount % 10000 / 100)
         } else if (playCount > 100000000) {
             standardPlayCount =
                 String.format(Locale.getDefault(), "收听人数:%d.%02d亿", playCount / 100000000, playCount % 100000000 / 1000000)

@@ -33,4 +33,5 @@
     <string name="selected">selected</string>
     <string name="string_collect_error">收藏失败，请重试</string>
     <string name="string_search_hint">中国之声</string>
+    <string name="string_live_title">正在直播:</string>
 </resources>
