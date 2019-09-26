@@ -21,6 +21,7 @@ import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.model.live.radio.RadioList
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import kotlinx.android.synthetic.main.activity_normal_radio_list.*
+import kotlinx.android.synthetic.main.layout_defult_toolbar.*
 import java.util.ArrayList
 
 class NormalRadioListActivity : BaseActivity() {
@@ -39,6 +40,10 @@ class NormalRadioListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_normal_radio_list)
+
+        index_toolbar.setNavigationOnClickListener{
+            finish()
+        }
 
         mPlayerManager = XmPlayerManager.getInstance(this)
          cityCode =intent.getIntExtra(CITYCODE,410000)
