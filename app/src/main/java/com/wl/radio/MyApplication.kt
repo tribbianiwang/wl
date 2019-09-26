@@ -30,6 +30,17 @@ import com.wl.radio.util.testJava.testReceiver
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
 import com.ximalaya.ting.android.opensdk.util.BaseUtil
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.api.RefreshFooter
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import android.R
+import android.R.attr.colorPrimary
+import com.scwang.smartrefresh.layout.api.RefreshHeader
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator
+import com.wl.radio.util.StringUtils
 
 
 class MyApplication : MultiDexApplication() {
@@ -46,7 +57,6 @@ class MyApplication : MultiDexApplication() {
         }
 
     }
-
 
 
 
@@ -94,7 +104,31 @@ class MyApplication : MultiDexApplication() {
             preShowIntent.setClass(this, MyPlayerReceiver::class.java!!)
             val preShowBroadcast = PendingIntent.getBroadcast(this, 0, preShowIntent, 0)
             instanse.setPrePendingIntent(preShowBroadcast)
+
         }
+
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(object:DefaultRefreshHeaderCreator{
+            override fun createRefreshHeader(
+                context: Context,
+                layout: RefreshLayout
+            ): RefreshHeader {
+                layout.setPrimaryColorsId(com.wl.radio.R.color.colorPrimary, android.R.color.white);//全局设置主题颜色
+                return  ClassicsHeader(Companion.context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+            }
+
+        })
+
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(object:DefaultRefreshFooterCreator{
+            override fun createRefreshFooter(
+                context: Context,
+                layout: RefreshLayout
+            ): RefreshFooter {
+                //指定为经典Footer，默认是 BallPulseFooter
+                return  ClassicsFooter(Companion.context).setDrawableSize(20f);
+            }
+
+        })
+
 
 
     }

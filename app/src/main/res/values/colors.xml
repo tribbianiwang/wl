@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FA0001</color>
-    <color name="colorPrimaryDark">#FA0001</color>
-    <color name="colorAccent">#FA0001</color>
+    <color name="colorPrimary">#A82127</color>
+    <color name="colorPrimaryDark">#A82127</color>
+    <color name="colorAccent">#A82127</color>
 
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
