@@ -9,6 +9,7 @@ import com.wl.radio.R
 import android.graphics.Bitmap
 import androidx.core.graphics.drawable.DrawableCompat
 import com.wl.radio.view.GramophoneView
+import jp.wasabeef.blurry.Blurry
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -52,6 +53,44 @@ object ImgUtils {
                 override fun onNext(bitmap: Bitmap) {
 
                     givCover.setPictureBitmMap(bitmap)
+                }
+
+                override fun onCompleted() {
+
+
+                }
+
+                override fun onError(e: Throwable?) {
+
+
+                }
+
+            })
+
+
+
+    }
+
+
+    fun showImgeUrlBitmapBlur(
+        context: Context,
+        imageUrl: String,
+        ivlogo: ImageView
+    ){
+//        Observable<Bitmap>.addObserver()
+        Observable.create<Bitmap> {
+            it.onNext(
+                Glide.with(context)
+                    .asBitmap()
+                    .load(imageUrl)
+                    .submit().get()
+            )
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Subscriber<Bitmap>() {
+                override fun onNext(bitmap: Bitmap) {
+
+                    // from Bitmap
+                    Blurry.with(context).from(bitmap).into(ivlogo)
                 }
 
                 override fun onCompleted() {

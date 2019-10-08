@@ -205,7 +205,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         selectRadio?.coverUrlLarge?.let {
 
             ImgUtils.showImgeUrlBitmap(this, it, givCover)
-
+            ImgUtils.showImgeUrlBitmapBlur(this,it,iv_bg)
 
         }
         tvRadioName.text = selectRadio?.programName
