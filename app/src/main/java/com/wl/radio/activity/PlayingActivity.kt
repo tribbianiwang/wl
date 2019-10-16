@@ -80,6 +80,9 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playing)
         initToolbar()
+        ImgUtils.showColorIcon( ivPlayPrevious,R.color.gray)
+        ImgUtils.showColorIcon( ivPlayPause,R.color.gray)
+        ImgUtils.showColorIcon( ivPlayNext,R.color.gray)
 
 
         // 创建手势检测器

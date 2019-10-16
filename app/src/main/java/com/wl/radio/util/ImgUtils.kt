@@ -33,6 +33,12 @@ object ImgUtils {
 
     }
 
+    fun showColorIcon(imageView:ImageView,colorId:Int){
+        imageView.setColorFilter(StringUtils.getColor(colorId));
+
+    }
+
+
 
     //    fun getImgeUrlBitmap(context: Context, imageUrl: String):Bitmap{
     fun showImgeUrlBitmap(
