@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:dist="http://schemas.android.com/apk/distribution"
-          package="com.wl.radio">
+        xmlns:dist="http://schemas.android.com/apk/distribution"
+        package="com.wl.radio">
 
-    <dist:module dist:instant="true"/>
+    <dist:module dist:instant="true" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
     <application
             android:name=".MyApplication"
@@ -26,53 +26,48 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activity.TestRoomActivity">
-
-        </activity>
+        <activity android:name=".activity.LookBackRadioActivity"></activity>
+        <activity android:name=".activity.TestRoomActivity"></activity>
         <activity
                 android:name=".activity.ProvinceRadioListActivity"
-                android:launchMode="singleTop">
-        </activity>
+                android:launchMode="singleTop"></activity>
         <activity
                 android:name=".activity.NormalRadioListActivity"
-                android:launchMode="singleTop">
-        </activity>
+                android:launchMode="singleTop"></activity>
 
         <meta-data
                 android:name="app_key"
-                android:value="9b6524dc6d6a39ebdc38eed8ea638c9f"/>
+                android:value="9b6524dc6d6a39ebdc38eed8ea638c9f" />
         <meta-data
                 android:name="pack_id"
-                android:value="com.wl.radio"/>
+                android:value="com.wl.radio" />
 
         <activity
                 android:name=".activity.PlayingActivity"
-                android:launchMode="singleTop">
-        </activity>
+                android:launchMode="singleTop"></activity>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service
                 android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService"
-                android:process=":player"/>
+                android:process=":player" />
 
         <receiver
                 android:name=".receiver.MyPlayerReceiver"
                 android:exported="true"
                 android:process=":player">
             <intent-filter>
-                <action android:name="com.wl.radio.action_exit_app"/>
-                <action android:name="com.wl.radio.action_start_or_pause"/>
-                <action android:name="com.wl.radio.action.next_show"/>
-                <action android:name="com.wl.radio.action_pre_show"/>
+                <action android:name="com.wl.radio.action_exit_app" />
+                <action android:name="com.wl.radio.action_start_or_pause" />
+                <action android:name="com.wl.radio.action.next_show" />
+                <action android:name="com.wl.radio.action_pre_show" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

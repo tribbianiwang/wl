@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.wl.radio.MyApplication
 import com.wl.radio.R
+import com.wl.radio.util.*
 import com.wl.radio.util.Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
@@ -29,10 +30,6 @@ import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
 import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
-import com.wl.radio.util.FastBlur
-import com.wl.radio.util.ImgUtils
-import com.wl.radio.util.LogUtils
-import com.wl.radio.util.StringUtils
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
 import com.ximalaya.ting.android.opensdk.model.PlayableModel
@@ -190,7 +187,13 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
         registerReceiver(broadcastReceiver, intentFilter)
 
-//        applyBlur();
+        ll_ridio_lookback.setOnClickListener {
+            Log.d("PlayingActivity",playingRadio?.dataId.toString()+"--"+playingRadio?.radioName)
+            var intent = Intent(this@PlayingActivity,LookBackRadioActivity::class.java)
+            intent.putExtra(Constants.TRANSRADIO,playingRadio)
+            startActivity(intent)
+
+        }
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {

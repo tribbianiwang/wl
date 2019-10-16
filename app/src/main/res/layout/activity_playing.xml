@@ -159,6 +159,8 @@
                 <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                               android:orientation="vertical"
                               android:gravity="center"
+                        android:foreground="?selectableItemBackground"
+                        android:id="@+id/ll_ridio_lookback"
                 >
                     <ImageView android:layout_width="25dp" android:layout_height="25dp"
                                android:src="@drawable/selector_back_to_listen_drawable"
@@ -168,6 +170,7 @@
                               android:textColor="@color/design_text_gray"
                               android:textSize="@dimen/micro_text_size"
                               android:text="@string/string_back_to_see"
+
                     />
 
 

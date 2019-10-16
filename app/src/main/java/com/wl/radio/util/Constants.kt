@@ -5,6 +5,8 @@ import com.wl.radio.R
 object Constants {
     val HIDE_LOADING_STATUS_MSG = "hide_loading_status_msg"
     val mainBottomTitles = arrayOf("首页", "导航", "播放","收藏","我的")
+    val LOOKBACKRADIOTITLES = arrayOf("昨天","今天","明天")
+    val TRANS_LOOKBACK_TYPE = "TRANS_LOOKBACK_TYPE"
 
     val NAVITITLES = arrayOf("排行榜","城市台","新闻台","音乐台",
         "交通台","经济台","体育台","文艺台",

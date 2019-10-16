@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">收音机</string>
-    <string name="str_none"/>
+    <string name="str_none" />
     <string name="loading">加载中…</string>
     <string name="load_failed">加载失败，点击重试</string>
     <string name="load_failed_no_network">网络失联了…\n请联网后点击重试</string>
@@ -34,4 +34,5 @@
     <string name="string_collect_error">收藏失败，请重试</string>
     <string name="string_search_hint">中国之声</string>
     <string name="string_live_title">正在直播:</string>
+    <string name="string_lookback">历史节目</string>
 </resources>
