@@ -35,4 +35,8 @@
     <string name="string_search_hint">中国之声</string>
     <string name="string_live_title">正在直播:</string>
     <string name="string_lookback">历史节目</string>
+    <string name="string_listen_back">回听</string>
+    <string name="string_unknow_announcer">未知主持人</string>
+    <string name="string_not_begin">未开始</string>
+    <string name="string_playing">直播</string>
 </resources>

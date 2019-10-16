@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:foreground="?selectableItemBackground"
+        android:background="@color/white"
+        android:orientation="vertical">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/app_margin_left"
+            >
+        <TextView
+                android:id="@+id/tv_program_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="河南你早"
+                android:textSize="@dimen/small_middle_text_size"
+                android:textColor="@color/design_text_black"
+                />
+        <TextView
+                android:layout_marginTop="@dimen/app_margin_small"
+                android:id="@+id/tv_host_names"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="主持人名称"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="@color/design_text_alpha_gray"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            >
+        <TextView
+                android:id="@+id/tv_start_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text_size"
+                android:text="06:00-07:00"
+                android:textColor="@color/design_text_alpha_gray"
+                />
+        <TextView
+                android:id="@+id/tv_look_back_status"
+                android:layout_marginTop="@dimen/app_margin_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text_size"
+                android:text="@string/string_listen_back"
+                android:textColor="@color/design_text_alpha_gray"
+                />
+
+    </LinearLayout>
+
+    <ImageView
+            android:layout_marginLeft="@dimen/app_margin_small"
+            android:layout_marginRight="@dimen/app_margin_small"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/icon_arrow_right_gray"
+            android:scaleType="fitXY"
+            />
+
+    </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/special_gray"
+            />
+
+</LinearLayout>
