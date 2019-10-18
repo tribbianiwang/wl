@@ -47,9 +47,17 @@ class RvLookBackAdapter(internal var mScheduleList: List<Schedule>, lookbackType
         when(lookbackType){
             "昨天"->     holder.itemView.tv_look_back_status.text = StringUtils.getString(R.string.string_listen_back)
             "今天"->   {
-//               isEffectiveDate(getNowDate(),getEffectificDate( mScheduleList.get(position).startTime),getEffectificDate( mScheduleList.get(position).endTime),holder.itemView.tv_look_back_status)
+                if(TextUtils.isEmpty(mScheduleList.get(position).listenBackUrl)){
+                    if(position>1&&!TextUtils.isEmpty(mScheduleList.get(position-1).listenBackUrl)){
+                        holder.itemView.tv_look_back_status.text = StringUtils.getString(R.string.string_live)
+                    }else{
+                        holder.itemView.tv_look_back_status.text = StringUtils.getString(R.string.string_not_begin)
+                    }
 
+                }else{
 
+                    holder.itemView.tv_look_back_status.text = StringUtils.getString(R.string.string_listen_back)
+                }
             }
             "明天"->    holder.itemView.tv_look_back_status.text = StringUtils.getString(R.string.string_not_begin)
         }
