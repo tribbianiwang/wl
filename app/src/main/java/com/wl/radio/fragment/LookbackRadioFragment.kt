@@ -2,6 +2,7 @@ package com.wl.radio.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.wl.radio.adapter.RvLookBackAdapter
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_LOOKBACK_TYPE
 import com.wl.radio.util.RecyclerSpace
+import com.wl.radio.util.RvItemClickListener
 import com.wl.radio.util.StringUtils
 import com.wl.radio.viewmodel.LookBackRadioViewModel
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
@@ -59,6 +61,14 @@ class LookbackRadioFragment : BaseFragment() {
         var lookBackBeansObserver:Observer<ScheduleList> = Observer {
             var rvLookBackAdapter = RvLookBackAdapter(it.getmScheduleList(),lookbackType)
             rv_lookback_list.adapter = rvLookBackAdapter
+
+            rvLookBackAdapter.mItemClickListener = object:RvItemClickListener{
+                override fun onItemClick(view: View, position: Int) {
+                    Log.d(this@LookbackRadioFragment.javaClass.simpleName,it.getmScheduleList().get(position).relatedProgram.programName)
+
+                }
+
+            }
 
         }
 

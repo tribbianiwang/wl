@@ -40,4 +40,5 @@
     <string name="string_not_begin">未开始</string>
     <string name="string_playing">直播</string>
     <string name="string_live">直播中</string>
+    <string name="program_not_start_yet">节目还未开始</string>
 </resources>

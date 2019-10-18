@@ -48,7 +48,7 @@ import kotlinx.android.synthetic.main.activity_playing.*
 class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     android.view.GestureDetector.OnGestureListener {
 
-
+    var animator: ObjectAnimator? = null
     val TAG: String = "PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
     // 定义手势检测器实例
@@ -194,6 +194,8 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
             startActivity(intent)
 
         }
+
+        initAnim()
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
@@ -210,7 +212,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
 
         selectRadio?.coverUrlLarge?.let {
 
-            ImgUtils.showImgeUrlBitmap(this, it, givCover)
+            ImgUtils.showImgeUrlBitmap(this, it, ivCover)
             ImgUtils.showImgeUrlBitmapBlur(this,it,iv_bg)
 
         }
@@ -371,15 +373,28 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     }
 
 
-    fun startRotateAnim() {
-        givCover.setPlaying(true)
-
+    var isAnimRunning: Boolean = false
+    fun initAnim() {
+        animator = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360.0f);
+        animator?.setDuration(20000);
+        animator?.setInterpolator(LinearInterpolator());//不停顿
+        animator?.setRepeatCount(-1);//设置动画重复次数
+        animator?.setRepeatMode(ValueAnimator.RESTART);//动画重复模式
     }
 
+    fun startRotateAnim() {
+
+        if (isAnimRunning) {
+            animator?.resume();
+        } else {
+            animator?.start();//开始动画
+            isAnimRunning = true;
+        }
+    }
 
     fun stopRotateAnim() {
-        givCover.setPlaying(false)
 
+        animator?.pause();
     }
 
 

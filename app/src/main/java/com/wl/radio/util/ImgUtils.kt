@@ -7,8 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.wl.radio.R
 import android.graphics.Bitmap
-import androidx.core.graphics.drawable.DrawableCompat
-import com.wl.radio.view.GramophoneView
+import de.hdodenhof.circleimageview.CircleImageView
 import jp.wasabeef.blurry.Blurry
 import rx.Observable
 import rx.Subscriber
@@ -44,7 +43,7 @@ object ImgUtils {
     fun showImgeUrlBitmap(
         context: Context,
         imageUrl: String,
-        givCover: GramophoneView
+        givCover: CircleImageView
     ){
 //        Observable<Bitmap>.addObserver()
         Observable.create<Bitmap> {
@@ -58,7 +57,7 @@ object ImgUtils {
             .subscribe(object : Subscriber<Bitmap>() {
                 override fun onNext(bitmap: Bitmap) {
 
-                    givCover.setPictureBitmMap(bitmap)
+                    givCover.setImageBitmap(bitmap)
                 }
 
                 override fun onCompleted() {
