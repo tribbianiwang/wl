@@ -10,6 +10,7 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -36,9 +37,11 @@ import com.ximalaya.ting.android.opensdk.model.PlayableModel
 import com.ximalaya.ting.android.opensdk.model.live.program.ProgramList
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.model.live.radio.RadioList
+import com.ximalaya.ting.android.opensdk.model.track.Track
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
 import com.ximalaya.ting.android.opensdk.player.appnotification.XmNotificationCreater
+import com.ximalaya.ting.android.opensdk.player.service.IXmDataCallback
 import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 
@@ -51,6 +54,9 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     var animator: ObjectAnimator? = null
     val TAG: String = "PlayingActivity"
     var mPlayerManager: XmPlayerManager? = null
+
+    var isScheduleMode = false
+
     // 定义手势检测器实例
     lateinit var detector: GestureDetector
     var rotateAnimator: ObjectAnimator? = null
@@ -91,8 +97,38 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         NotificationColorUtils.isTargerSDKVersion24More = true;
         mPlayerManager?.init(System.currentTimeMillis().toInt(), mNotification)
         mPlayerManager?.addPlayerStatusListener(this)
+        mPlayerManager?.setPlayListChangeListener(object:IXmDataCallback{
+            override fun onDataReady(p0: MutableList<Track>?, p1: Boolean, p2: Boolean) {
+
+
+                p0?.get(0)?.coverUrlLarge?.let {
+                    ImgUtils.showImgeUrlBitmap(this@PlayingActivity,
+                        it, ivCover)
+                }
+                p0?.get(0)?.coverUrlLarge?.let {
+                    ImgUtils.showImgeUrlBitmapBlur(this@PlayingActivity,
+                        it,iv_bg)
+                }
+
+
+                tvRadioName.text = p0?.get(0)?.channelName
+                tvTitle.text = p0?.get(0)?.radioName
+
+
+            }
+
+            override fun onError(p0: Int, p1: String?, p2: Boolean) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun asBinder(): IBinder {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
 
         val transRadio = intent.getParcelableExtra<Radio>(TRANSRADIO);
+        isScheduleMode =intent.getBooleanExtra(Constants.PLAYING_SCHEDULE_MODE,false)
 
 
         //1
@@ -172,7 +208,10 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
             setViewData(transRadio, false)
             LogUtils.d(TAG, "transRadio!=null")
 
-        } else {
+        } else if(isScheduleMode){
+            mPlayerManager?.playSchedule(MyApplication.scheduleList,MyApplication.scheduleIndex)
+
+        }else{
             if (!(mPlayerManager?.isPlaying ?: false)) {
                 //没有正在播放的广播
                 radioLiveViewModel.getXmlyRadios(1, 0, 1)
@@ -188,7 +227,6 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         registerReceiver(broadcastReceiver, intentFilter)
 
         ll_ridio_lookback.setOnClickListener {
-            Log.d("PlayingActivity",playingRadio?.dataId.toString()+"--"+playingRadio?.radioName)
             var intent = Intent(this@PlayingActivity,LookBackRadioActivity::class.java)
             intent.putExtra(Constants.TRANSRADIO,playingRadio)
             startActivity(intent)
@@ -196,9 +234,35 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         }
 
         initAnim()
+
+
+        ivPlayPause.setOnClickListener {
+            if (mPlayerManager?.isPlaying!!) {
+
+                mPlayerManager!!.pause()
+            } else {
+                mPlayerManager?.play()
+            }
+
+
+
+
+        }
+        ivPlayNext.setOnClickListener {
+
+            MyApplication.playNextRadio()
+
+        }
+
+        ivPlayPrevious.setOnClickListener {
+            MyApplication.playPreRadio()
+        }
+
+
     }
 
     private fun setTitleAndImg(selectRadio: Radio?) {
+
         playingRadio = selectRadio
         playingRadio?.let {
             MyApplication.addHistoryRadios(it)
@@ -235,66 +299,48 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
 
         if (!isOnlySetView) {
             mPlayerManager?.playActivityRadio(selectRadio)
+            MyApplication.clearSchedule()
+            iv_collect_radio.setOnClickListener {
+                if (iv_collect_radio.getTag().equals(StringUtils.getString(R.string.unselected))) {
+                    //开始执行收藏
+                    iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
+                    iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
+
+                    iv_collect_radio.startAnimation(
+                        AnimationUtils.loadAnimation(
+                            this@PlayingActivity,
+                            R.anim.add_collect_anim
+                        )
+                    );
+                    //收藏电台id
+
+                    if (playingRadio != null) {
+                        collectRadioViewModel.addCollectRadio(playingRadio!!.dataId.toString())
+                    }
+
+
+                } else {
+                    //开始执行取消收藏
+                    if (playingRadio != null) {
+                        collectRadioViewModel.deleteCollectRadioById(playingRadio!!.dataId.toString())
+                    }
+
+                    iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
+                    iv_collect_radio.setTag(StringUtils.getString(R.string.unselected))
+
+                }
+
+            }
+
 
         }
 
         setTitleAndImg(selectRadio)
 
 
-        ivPlayPause.setOnClickListener {
-            if (mPlayerManager?.isPlaying!!) {
-
-                mPlayerManager!!.pause()
-            } else {
-                mPlayerManager?.play()
-            }
-
-
-        }
-        ivPlayNext.setOnClickListener {
-
-            MyApplication.playNextRadio()
-
-        }
-
-        ivPlayPrevious.setOnClickListener {
-            MyApplication.playPreRadio()
-        }
 
 
 
-
-        iv_collect_radio.setOnClickListener {
-            if (iv_collect_radio.getTag().equals(StringUtils.getString(R.string.unselected))) {
-                //开始执行收藏
-                iv_collect_radio.setImageResource(R.drawable.icon_heart_red)
-                iv_collect_radio.setTag(StringUtils.getString(R.string.selected))
-
-                iv_collect_radio.startAnimation(
-                    AnimationUtils.loadAnimation(
-                        this@PlayingActivity,
-                        R.anim.add_collect_anim
-                    )
-                );
-                //收藏电台id
-
-                if (playingRadio != null) {
-                    collectRadioViewModel.addCollectRadio(playingRadio!!.dataId.toString())
-                }
-
-
-            } else {
-                //开始执行取消收藏
-                if (playingRadio != null) {
-                    collectRadioViewModel.deleteCollectRadioById(playingRadio!!.dataId.toString())
-                }
-
-                iv_collect_radio.setImageResource(R.drawable.icon_heart_gray)
-                iv_collect_radio.setTag(StringUtils.getString(R.string.unselected))
-
-            }
-
-        }
 
 
     }
@@ -308,7 +354,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         ivPlayPause.setImageResource(R.drawable.selector_pause_drawable)
     }
 
-    override fun onSoundSwitch(p0: PlayableModel?, p1: PlayableModel?) {
+    override fun onSoundSwitch(lastModel: PlayableModel?, curModel: PlayableModel?) {
     }
 
     override fun onPlayProgress(p0: Int, p1: Int) {

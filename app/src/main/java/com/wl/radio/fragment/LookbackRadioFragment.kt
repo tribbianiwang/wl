@@ -1,6 +1,7 @@
 package com.wl.radio.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,18 +12,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wl.radio.MyApplication
 
 import com.wl.radio.R
+import com.wl.radio.activity.PlayingActivity
 import com.wl.radio.adapter.RvLookBackAdapter
+import com.wl.radio.util.Constants.PLAYING_SCHEDULE_MODE
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_LOOKBACK_TYPE
-import com.wl.radio.util.RecyclerSpace
 import com.wl.radio.util.RvItemClickListener
 import com.wl.radio.util.StringUtils
 import com.wl.radio.viewmodel.LookBackRadioViewModel
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.model.live.schedule.ScheduleList
 import kotlinx.android.synthetic.main.fragment_lookback_radio.*
@@ -65,6 +65,15 @@ class LookbackRadioFragment : BaseFragment() {
             rvLookBackAdapter.mItemClickListener = object:RvItemClickListener{
                 override fun onItemClick(view: View, position: Int) {
                     Log.d(this@LookbackRadioFragment.javaClass.simpleName,it.getmScheduleList().get(position).relatedProgram.programName)
+                    MyApplication.scheduleList.clear()
+                    MyApplication.scheduleList.addAll(it.getmScheduleList())
+                    MyApplication.scheduleIndex = position
+
+                    var intent = Intent(context,PlayingActivity::class.java)
+                    intent.putExtra(PLAYING_SCHEDULE_MODE,true)
+                    startActivity(intent)
+
+
 
                 }
 

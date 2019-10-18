@@ -44,7 +44,7 @@
 
         <activity
                 android:name=".activity.PlayingActivity"
-                android:launchMode="singleTop"></activity>
+                android:launchMode="singleInstance"></activity>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

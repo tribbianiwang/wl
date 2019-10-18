@@ -41,6 +41,7 @@ import android.R.attr.colorPrimary
 import com.scwang.smartrefresh.layout.api.RefreshHeader
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator
 import com.wl.radio.util.StringUtils
+import com.ximalaya.ting.android.opensdk.model.live.schedule.Schedule
 
 
 class MyApplication : MultiDexApplication() {
@@ -136,6 +137,9 @@ class MyApplication : MultiDexApplication() {
     companion object {
         var playingRadioList: ArrayList<Radio> = ArrayList()
         var historyRadioList:ArrayList<Radio> = ArrayList()
+        var scheduleList: ArrayList<Schedule> = ArrayList() //回看节目
+        var scheduleIndex:Int = 0//回看节目下标
+
         var  context:Application? = null
        lateinit var userDao: UserDao
         lateinit var collectRadioDao:CollectRadioDao
@@ -144,7 +148,17 @@ class MyApplication : MultiDexApplication() {
             return context!!
         }
         fun playNextRadio(): Radio? {
-            if (playingRadioList.size > 0 &&getPlayingRadioIndex() < (playingRadioList.size - 1)) {
+            if(scheduleList.size>0&& scheduleIndex<(scheduleList.size-1)){
+                scheduleIndex++
+                playPositionSchedule()
+
+                return null
+            }else if(scheduleIndex==(scheduleList.size-1)&& scheduleList.size!=0){
+                scheduleIndex = 0
+                playPositionSchedule()
+
+                return null
+            }else if (playingRadioList.size > 0 &&getPlayingRadioIndex() < (playingRadioList.size - 1)) {
                return playPositionRadio(getPlayingRadioIndex() + 1);
             }else if(getPlayingRadioIndex()== (playingRadioList.size-1)&&playingRadioList.size!=0){
               return  playPositionRadio(0);
@@ -159,9 +173,22 @@ class MyApplication : MultiDexApplication() {
             return playingRadioList[position]
         }
 
+        fun playPositionSchedule(){
+            XmPlayerManager.getInstance(getContext()).playSchedule(scheduleList, scheduleIndex)
+        }
+
+
 
         fun playPreRadio():Radio?{
-            if (playingRadioList.size > 0 && getPlayingRadioIndex() != 0) {
+            if(scheduleList.size>0&& scheduleIndex!=0){
+                scheduleIndex =scheduleIndex-1
+                playPositionSchedule()
+                return null
+            }else if(scheduleIndex==0&& scheduleList.size!=0){
+                scheduleIndex = (scheduleList.size-1)
+                playPositionSchedule()
+                return null
+            }else if (playingRadioList.size > 0 && getPlayingRadioIndex() != 0) {
                 return playPositionRadio(getPlayingRadioIndex()-1)
             }else if(getPlayingRadioIndex()==0&&playingRadioList.size!=0){
                 return playPositionRadio(playingRadioList.size-1)
@@ -195,6 +222,8 @@ class MyApplication : MultiDexApplication() {
                     break;
                 }
             }
+
+
             return 0
         }
 
@@ -236,9 +265,14 @@ class MyApplication : MultiDexApplication() {
 
         }
 
-
+        fun clearSchedule(){
+            MyApplication.scheduleList.clear()
+            MyApplication.scheduleIndex=-1
+        }
 
     }
+
+
 
 
     fun setColorTheme(){
