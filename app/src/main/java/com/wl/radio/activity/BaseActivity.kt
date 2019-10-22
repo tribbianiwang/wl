@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.billy.android.loading.Gloading
+import com.wl.radio.R
 import com.wl.radio.util.ActivityUtil
+
+
+
 
 open class BaseActivity : AppCompatActivity(){
 
@@ -63,5 +67,31 @@ open class BaseActivity : AppCompatActivity(){
         val intent = Intent(this, targetActivity)
         startActivity(intent)
     }
+
+    override fun startActivity(intent: Intent) {
+        super.startActivity(intent)
+
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out)
+    }
+
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_right_out)
+    }
+
+    override fun startActivityForResult(
+        intent: Intent,
+        requestCode: Int, options: Bundle?
+    ) {
+        super.startActivityForResult(intent, requestCode, options)
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out)
+    }
+
+    override fun startActivityForResult(intent: Intent, requestCode: Int) {
+        super.startActivityForResult(intent, requestCode)
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out)
+    }
+
 
 }

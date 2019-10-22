@@ -40,6 +40,7 @@ import android.R
 import android.R.attr.colorPrimary
 import com.scwang.smartrefresh.layout.api.RefreshHeader
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator
+import com.wl.radio.util.Constants.TRANS_SCHEDULE
 import com.wl.radio.util.StringUtils
 import com.ximalaya.ting.android.opensdk.model.live.schedule.Schedule
 
@@ -169,12 +170,14 @@ class MyApplication : MultiDexApplication() {
 
         fun playPositionRadio(position:Int):Radio{
             XmPlayerManager.getInstance(getContext()).playActivityRadio(playingRadioList[position])
-            sendUpdateImageAndTitleBroadcast(playingRadioList[position])
+            sendUpdateImageAndTitleRadioBroadcast(playingRadioList[position])
             return playingRadioList[position]
         }
 
         fun playPositionSchedule(){
             XmPlayerManager.getInstance(getContext()).playSchedule(scheduleList, scheduleIndex)
+            var intent = Intent(Constants.RESET_SCHEDULE_IMG_AND_TITLE_ACTION)
+            context?.sendBroadcast(intent)
         }
 
 
@@ -198,7 +201,7 @@ class MyApplication : MultiDexApplication() {
             }
 
         }
-        fun sendUpdateImageAndTitleBroadcast(radio: Radio){
+        fun sendUpdateImageAndTitleRadioBroadcast(radio: Radio){
             var intent = Intent(RESET_RADIO_IMG_AND_TITLE_ACTION)
             intent.putExtra(TRANSRADIO,radio)
             getContext().sendBroadcast(intent)
@@ -226,6 +229,11 @@ class MyApplication : MultiDexApplication() {
 
             return 0
         }
+
+        fun getPlayingSchedule():Schedule{
+             return scheduleList.get(scheduleIndex)
+        }
+
 
         fun refreshRadioList(newRadioList:ArrayList<Radio>){
 

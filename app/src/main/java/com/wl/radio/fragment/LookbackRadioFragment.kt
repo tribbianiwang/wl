@@ -18,6 +18,7 @@ import com.wl.radio.R
 import com.wl.radio.activity.PlayingActivity
 import com.wl.radio.adapter.RvLookBackAdapter
 import com.wl.radio.util.Constants.PLAYING_SCHEDULE_MODE
+import com.wl.radio.util.Constants.PLAY_SCHEDULE_MODE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_LOOKBACK_TYPE
 import com.wl.radio.util.RvItemClickListener
@@ -69,9 +70,10 @@ class LookbackRadioFragment : BaseFragment() {
                     MyApplication.scheduleList.addAll(it.getmScheduleList())
                     MyApplication.scheduleIndex = position
 
-                    var intent = Intent(context,PlayingActivity::class.java)
-                    intent.putExtra(PLAYING_SCHEDULE_MODE,true)
-                    startActivity(intent)
+
+                    var intent = Intent(PLAY_SCHEDULE_MODE_ACTION)
+                    context?.sendBroadcast(intent)
+                    activity?.finish()
 
 
 

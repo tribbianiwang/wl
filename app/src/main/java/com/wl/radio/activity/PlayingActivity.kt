@@ -25,18 +25,22 @@ import com.wl.radio.MyApplication
 import com.wl.radio.R
 import com.wl.radio.util.*
 import com.wl.radio.util.Constants.BROADCAST_REFRESH_PLAY_RADIO_HISTORY
+import com.wl.radio.util.Constants.PLAY_SCHEDULE_MODE_ACTION
 import com.wl.radio.util.Constants.QUERYSTATUSFAILED
 import com.wl.radio.util.Constants.QUERYSTATUSLOADING
 import com.wl.radio.util.Constants.QUERYSTATUSSUCCESS
 import com.wl.radio.util.Constants.RESET_RADIO_IMG_AND_TITLE_ACTION
+import com.wl.radio.util.Constants.RESET_SCHEDULE_IMG_AND_TITLE_ACTION
 import com.wl.radio.util.Constants.TRANSRADIO
 import com.wl.radio.util.Constants.TRANS_PLAYING_RADIO
+import com.wl.radio.util.Constants.TRANS_SCHEDULE
 import com.wl.radio.viewmodel.CollectRadioViewModel
 import com.wl.radio.viewmodel.RadioLiveViewModel
 import com.ximalaya.ting.android.opensdk.model.PlayableModel
 import com.ximalaya.ting.android.opensdk.model.live.program.ProgramList
 import com.ximalaya.ting.android.opensdk.model.live.radio.Radio
 import com.ximalaya.ting.android.opensdk.model.live.radio.RadioList
+import com.ximalaya.ting.android.opensdk.model.live.schedule.Schedule
 import com.ximalaya.ting.android.opensdk.model.track.Track
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 import com.ximalaya.ting.android.opensdk.player.appnotification.NotificationColorUtils
@@ -46,6 +50,7 @@ import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException
 
 import kotlinx.android.synthetic.main.activity_playing.*
+import kotlinx.android.synthetic.main.layout_defult_toolbar.view.*
 
 
 class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
@@ -70,7 +75,21 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
             when (intent.action) {
                 RESET_RADIO_IMG_AND_TITLE_ACTION -> {
 
-                    setTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
+                    setRadioTitleAndImg(intent.getParcelableExtra<Radio>(TRANSRADIO))
+                }
+
+                RESET_SCHEDULE_IMG_AND_TITLE_ACTION->{
+
+                    setScheduleTitleImgProgressData(MyApplication.getPlayingSchedule())
+                }
+
+                PLAY_SCHEDULE_MODE_ACTION->{
+                    isScheduleMode = true
+                    setScheduleTitleImgProgressData(MyApplication.getPlayingSchedule())
+                    mPlayerManager?.playSchedule(MyApplication.scheduleList,MyApplication.scheduleIndex)
+
+
+
                 }
             }
 
@@ -97,35 +116,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         NotificationColorUtils.isTargerSDKVersion24More = true;
         mPlayerManager?.init(System.currentTimeMillis().toInt(), mNotification)
         mPlayerManager?.addPlayerStatusListener(this)
-        mPlayerManager?.setPlayListChangeListener(object:IXmDataCallback{
-            override fun onDataReady(p0: MutableList<Track>?, p1: Boolean, p2: Boolean) {
 
-
-                p0?.get(0)?.coverUrlLarge?.let {
-                    ImgUtils.showImgeUrlBitmap(this@PlayingActivity,
-                        it, ivCover)
-                }
-                p0?.get(0)?.coverUrlLarge?.let {
-                    ImgUtils.showImgeUrlBitmapBlur(this@PlayingActivity,
-                        it,iv_bg)
-                }
-
-
-                tvRadioName.text = p0?.get(0)?.channelName
-                tvTitle.text = p0?.get(0)?.radioName
-
-
-            }
-
-            override fun onError(p0: Int, p1: String?, p2: Boolean) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun asBinder(): IBinder {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-        })
 
         val transRadio = intent.getParcelableExtra<Radio>(TRANSRADIO);
         isScheduleMode =intent.getBooleanExtra(Constants.PLAYING_SCHEDULE_MODE,false)
@@ -208,10 +199,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
             setViewData(transRadio, false)
             LogUtils.d(TAG, "transRadio!=null")
 
-        } else if(isScheduleMode){
-            mPlayerManager?.playSchedule(MyApplication.scheduleList,MyApplication.scheduleIndex)
-
-        }else{
+        } else {
             if (!(mPlayerManager?.isPlaying ?: false)) {
                 //没有正在播放的广播
                 radioLiveViewModel.getXmlyRadios(1, 0, 1)
@@ -223,7 +211,11 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
         }
 
 
-        var intentFilter = IntentFilter(RESET_RADIO_IMG_AND_TITLE_ACTION)
+        var intentFilter = IntentFilter()
+        intentFilter.addAction(RESET_RADIO_IMG_AND_TITLE_ACTION)
+        intentFilter.addAction(RESET_SCHEDULE_IMG_AND_TITLE_ACTION)
+        intentFilter.addAction(PLAY_SCHEDULE_MODE_ACTION)
+
         registerReceiver(broadcastReceiver, intentFilter)
 
         ll_ridio_lookback.setOnClickListener {
@@ -237,15 +229,12 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
 
 
         ivPlayPause.setOnClickListener {
-            if (mPlayerManager?.isPlaying!!) {
+            if (mPlayerManager?.isPlaying?:false) {
 
-                mPlayerManager!!.pause()
+                mPlayerManager?.pause()
             } else {
                 mPlayerManager?.play()
             }
-
-
-
 
         }
         ivPlayNext.setOnClickListener {
@@ -260,8 +249,14 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
 
 
     }
+    fun setScheduleTitleImgProgressData(schedule: Schedule){
 
-    private fun setTitleAndImg(selectRadio: Radio?) {
+        setTitleAndImg("",schedule.radioName,schedule.relatedProgram.programName)
+    }
+
+
+
+    private fun setRadioTitleAndImg(selectRadio: Radio?) {
 
         playingRadio = selectRadio
         playingRadio?.let {
@@ -273,26 +268,39 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
             this@PlayingActivity.sendBroadcast(intent)
 
         }
+        setTitleAndImg(playingRadio?.coverUrlLarge.toString(),playingRadio?.radioName.toString(),playingRadio?.programName.toString())
 
-        selectRadio?.coverUrlLarge?.let {
-
-            ImgUtils.showImgeUrlBitmap(this, it, ivCover)
-            ImgUtils.showImgeUrlBitmapBlur(this,it,iv_bg)
-
-        }
-        tvRadioName.text = selectRadio?.programName
-        tvTitle.text = selectRadio?.radioName
 
         if (selectRadio != null) {
             collectRadioViewModel.queryCollectRadioById(selectRadio.dataId.toString())
         }
 
-//        applyBlur();
+    }
+
+    fun setTitleAndImg(imgUrl:String,radioName:String?,programName:String?){
+
+
+            ImgUtils.showImgeUrlBitmap(this, imgUrl, ivCover)
+            ImgUtils.showImgeUrlBitmapBlur(this,imgUrl,iv_bg)
+
+        tvRadioName.text = programName
+        tvTitle.text = radioName
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("playingactivity-","onDestory")
         unregisterReceiver(broadcastReceiver)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("playingactivity-","onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("playingactivity-","onStop")
     }
 
     private fun setViewData(selectRadio: Radio?, isOnlySetView: Boolean) {
@@ -335,7 +343,7 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
 
         }
 
-        setTitleAndImg(selectRadio)
+        setRadioTitleAndImg(selectRadio)
 
 
 
@@ -355,15 +363,12 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     }
 
     override fun onSoundSwitch(lastModel: PlayableModel?, curModel: PlayableModel?) {
+
     }
 
     override fun onPlayProgress(p0: Int, p1: Int) {
         ivPlayPause.setImageResource(R.drawable.selector_pause_drawable)
-//        when(mPlayerManager?.isAdPlaying){
-//            false->tvAd.text="节目播放中"
-//            true->tvAd.text="广告播放中"
-//        }
-        LogUtils.d(TAG, "onPlayProgress" + mPlayerManager?.isAdPlaying)
+
 
     }
 
@@ -388,7 +393,6 @@ class PlayingActivity : BaseActivity(), IXmPlayerStatusListener,
     }
 
     override fun onSoundPlayComplete() {
-        LogUtils.d(TAG, "onPlayStop")
     }
 
     override fun onError(p0: XmPlayerException?): Boolean {
